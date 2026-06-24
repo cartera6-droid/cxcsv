@@ -250,10 +250,10 @@ tbody tr:last-child td{border-bottom:none}
     <div class="sec"><span class="sec-t">Indicador de Mora</span><span class="sec-line"></span></div>
     <div class="g31">
       <div class="panel"><div class="panel-h"><span class="panel-t">Antig&uuml;edad de Saldos</span></div><div class="ch ch220"><canvas id="c-ant"></canvas></div></div>
-      <div class="panel"><div class="panel-h"><span class="panel-t">KPI Mora vs Meta 5%</span></div>
+      <div class="panel"><div class="panel-h"><span class="panel-t" id="gauge-title">KPI Mora vs Meta 5%</span></div>
         <div class="gauge-wrap">
           <div class="gauge-c"><canvas id="c-gauge"></canvas><div class="gauge-lbl"><div class="gauge-v" id="g-val">&mdash;</div><div class="gauge-s">Mora actual</div></div></div>
-          <div class="gauge-meta"><div class="gm"><div class="gm-v" id="g-venc">&mdash;</div><div class="gm-l">Vencido</div></div><div class="gm"><div class="gm-v">5.00%</div><div class="gm-l">Meta</div></div></div>
+          <div class="gauge-meta"><div class="gm"><div class="gm-v" id="g-venc">&mdash;</div><div class="gm-l">Vencido</div></div><div class="gm"><div class="gm-v" id="g-meta">5.00%</div><div class="gm-l">Meta</div></div></div>
         </div>
       </div>
     </div>
@@ -403,10 +403,13 @@ function bAnt(){
 }
 function bGauge(){
   var k=gk(),pct=Math.min(k.pctMora||0,100);
+  var meta=(fC==='todos')?5:3;
+  var mEl=document.getElementById('g-meta');if(mEl)mEl.textContent=meta.toFixed(2)+'%';
+  var tEl=document.getElementById('gauge-title');if(tEl)tEl.textContent='KPI Mora vs Meta '+meta+'%';
   var gv=document.getElementById('g-val');gv.textContent=(k.pctMora||0).toFixed(2)+'%';
-  gv.style.color=pct>15?'#E04F5F':pct>5?'#E8A13A':'#1B9E6F';
+  gv.style.color=pct>15?'#E04F5F':pct>meta?'#E8A13A':'#1B9E6F';
   document.getElementById('g-venc').textContent=fS(k.vencido||0);
-  var col=pct>15?'#E04F5F':pct>5?'#E8A13A':'#1B9E6F';
+  var col=pct>15?'#E04F5F':pct>meta?'#E8A13A':'#1B9E6F';
   mkChart('gauge',document.getElementById('c-gauge'),{type:'doughnut',
     data:{datasets:[{data:[pct,100-pct],backgroundColor:[col,'#EDF1F1'],borderWidth:0,circumference:180,rotation:270}]},
     options:{responsive:true,maintainAspectRatio:false,cutout:'72%',plugins:{legend:{display:false},tooltip:{enabled:false}}}});
