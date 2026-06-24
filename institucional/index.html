@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lactolac El Salvador &mdash; Institucional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F1F5F9;--surface:#FFFFFF;--surface2:#F8FAFC;--surface3:#EAEEF3;
+  --border:#E2E8F0;--border2:#CBD5E1;
+  --pri:#4F46E5;--pri-light:#A5B4FC;--pri-dark:#3730A3;--pri-soft:rgba(79,70,229,.10);
+  --sec:#475569;--acc:#F43F5E;
+  --green:#1B9E6F;--green-soft:rgba(27,158,111,.10);
+  --red:#E04F5F;--red-soft:rgba(224,79,95,.10);
+  --amber:#E8A13A;--amber-soft:rgba(232,161,58,.12);
+  --txt:#1E293B;--txt2:#475569;--txt3:#64748B;--txt4:#94A3B8;
+  --mono:'IBM Plex Mono','Consolas',monospace;
+  --sans:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;
+  --shadow:0 1px 2px rgba(20,30,40,.04);--shadow2:0 6px 24px rgba(20,30,40,.09);
+  --r-lg:20px;--r-md:16px;--r-sm:12px;
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--txt);font-size:13px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1600px;margin:0 auto;padding:22px 26px}
+.pagehead{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:var(--r-lg);padding:18px 24px;box-shadow:var(--shadow);margin-bottom:22px;flex-wrap:wrap;gap:14px}
+.ph-left{display:flex;align-items:center;gap:16px}
+.ph-logo{height:42px;width:auto}
+.ph-title{font-size:18px;font-weight:700;letter-spacing:-.3px;color:var(--txt)}
+.ph-sub{font-size:11px;color:var(--txt3);margin-top:2px;font-weight:500;letter-spacing:.2px}
+.ph-right{display:flex;align-items:center;gap:14px}
+.tb-badge{display:inline-block;margin-left:10px;font-size:10px;font-weight:700;font-family:var(--mono);padding:4px 10px;border-radius:8px;background:var(--pri-soft);color:var(--pri-dark);vertical-align:middle;letter-spacing:.5px}
+.tb-date{font-family:var(--mono);font-size:11px;color:var(--txt3);letter-spacing:.3px;background:var(--surface2);padding:9px 14px;border-radius:10px}
+.live{display:inline-flex;align-items:center;gap:6px;color:var(--green);font-weight:600;font-size:11px;font-family:var(--mono)}
+.live .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green)}
+.live.off{color:var(--txt4)}.live.off .dot{background:var(--txt4);box-shadow:none}
+.filters{display:flex;gap:22px;align-items:center;flex-wrap:wrap;margin-bottom:22px}
+.fgroup{display:flex;align-items:center;gap:9px}
+.fglabel{font-size:9px;font-weight:700;letter-spacing:1px;color:var(--txt4);text-transform:uppercase}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:7px 14px;border-radius:11px;font-size:11.5px;font-weight:500;color:var(--txt2);background:var(--surface);border:1px solid transparent;cursor:pointer;transition:all .14s;font-family:var(--sans);box-shadow:var(--shadow)}
+.chip.fixed{background:var(--pri);color:#fff;font-weight:600;cursor:default}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:15px}
+.kcard{background:var(--surface);border-radius:var(--r-md);padding:20px;box-shadow:var(--shadow);position:relative;transition:all .15s;overflow:hidden}
+.kcard:hover{box-shadow:var(--shadow2)}
+.kcard.feature{background:var(--pri);color:#fff}
+.kcard.feature::after{content:'';position:absolute;right:-30px;bottom:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.06)}
+.kc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.klabel{font-size:11.5px;font-weight:600;color:var(--txt2);letter-spacing:.1px}
+.kcard.feature .klabel{color:rgba(255,255,255,.78)}
+.karrow{width:30px;height:30px;border-radius:50%;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;color:var(--txt3);flex-shrink:0}
+.kcard.feature .karrow{background:rgba(255,255,255,.16);color:#fff}
+.kval{font-family:var(--mono);font-size:30px;font-weight:600;letter-spacing:-1px;line-height:1;color:var(--txt)}
+.kcard.feature .kval{color:#fff}
+.kval.green{color:var(--green)}.kval.red{color:var(--red)}.kval.pri{color:var(--pri)}
+.ksub{font-size:10.5px;color:var(--txt3);margin-top:11px;font-family:var(--sans);display:flex;align-items:center;gap:5px;font-weight:500}
+.kcard.feature .ksub{color:rgba(255,255,255,.72)}
+.ktrend{font-family:var(--mono);font-weight:600}.ktrend.up{color:var(--green)}.kcard.feature .ktrend.up{color:#fff}
+.sec{margin:24px 0 15px;display:flex;align-items:baseline;gap:12px}
+.sec-t{font-size:15px;font-weight:700;letter-spacing:-.3px;color:var(--txt)}
+.sec-line{flex:1}.sec-meta{font-size:10px;color:var(--txt4);font-family:var(--mono)}
+.panel{background:var(--surface);border-radius:var(--r-md);padding:22px;box-shadow:var(--shadow)}
+.panel-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.panel-t{font-size:14px;font-weight:700;color:var(--txt);letter-spacing:-.2px}
+.panel-tag{font-size:9.5px;font-family:var(--mono);padding:4px 10px;border-radius:8px;background:var(--surface3);color:var(--txt3);font-weight:600}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.g31{display:grid;grid-template-columns:1.6fr 1fr;gap:15px}
+.ch{position:relative}.ch220{height:230px}.ch200{height:200px}.ch260{height:270px}
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:230px}
+.gauge-c{position:relative;width:100%;height:170px}
+.gauge-lbl{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);text-align:center}
+.gauge-v{font-family:var(--mono);font-size:32px;font-weight:700;letter-spacing:-1px;line-height:1}
+.gauge-s{font-size:10px;color:var(--txt3);margin-top:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.gauge-meta{display:flex;gap:18px;margin-top:6px}
+.gm{text-align:center}.gm-v{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--txt)}.gm-l{font-size:9px;color:var(--txt4);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.acard{background:var(--surface);border-radius:var(--r-md);padding:18px;box-shadow:var(--shadow);cursor:pointer;transition:all .15s;border:2px solid transparent}
+.acard:hover{box-shadow:var(--shadow2);transform:translateY(-2px)}
+.acard.active{border-color:var(--pri)}
+.acard-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.acard-name{font-size:12px;font-weight:700;color:var(--txt);letter-spacing:-.1px}
+.acard-tag{font-size:8.5px;font-family:var(--mono);padding:3px 8px;border-radius:6px;background:var(--pri-soft);color:var(--pri-dark);font-weight:700}
+.acard-val{font-family:var(--mono);font-size:19px;font-weight:600;color:var(--txt);letter-spacing:-.5px}
+.acard-sub{font-size:10px;color:var(--txt3);margin-top:6px;font-family:var(--mono)}
+.acard-bar{height:6px;background:var(--surface3);border-radius:10px;margin-top:11px;overflow:hidden}
+.acard-barf{height:100%;border-radius:10px;transition:width .8s ease;background:var(--pri)}
+.prow{display:flex;align-items:center;gap:12px;margin-bottom:11px}
+.plbl{font-family:var(--mono);font-size:10.5px;color:var(--txt2);width:64px;flex-shrink:0;font-weight:500}
+.plbl.long{width:175px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ptrk{flex:1;background:var(--surface3);border-radius:20px;height:22px;overflow:hidden}
+.pfil{height:100%;border-radius:20px;display:flex;align-items:center;padding:0 11px;font-family:var(--mono);font-size:9.5px;font-weight:600;color:#fff;white-space:nowrap;width:0;transition:width .8s cubic-bezier(.4,0,.2,1)}
+.ppct{font-family:var(--mono);font-size:9.5px;color:var(--txt4);width:40px;text-align:right;flex-shrink:0;font-weight:600}
+.prow.mir{flex-direction:row-reverse}
+.prow.mir .plbl{text-align:right}
+.prow.mir .ptrk{display:flex;justify-content:flex-end}
+.prow.mir .pfil{flex-direction:row-reverse}
+.tw{overflow-x:auto}.tscroll{max-height:340px;overflow-y:auto}
+.tscroll::-webkit-scrollbar{width:7px;height:7px}.tscroll::-webkit-scrollbar-track{background:transparent}.tscroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+thead th{position:sticky;top:0;background:var(--surface);padding:10px 12px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.6px;color:var(--txt4);text-transform:uppercase;white-space:nowrap;border-bottom:1px solid var(--border);z-index:1}
+th.r{text-align:right}
+td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--txt2)}
+td.r{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+td.bold{font-weight:600;color:var(--txt)}td.mono{font-family:var(--mono);color:var(--txt3);font-size:10.5px}
+tbody tr{transition:background .1s}tbody tr:hover{background:var(--surface2)}tbody tr:last-child td{border-bottom:none}
+.tag-d{display:inline-block;padding:3px 10px;border-radius:20px;font-family:var(--mono);font-size:9.5px;font-weight:600}
+.tag-d.red{background:var(--red-soft);color:var(--red)}.tag-d.amber{background:var(--amber-soft);color:var(--amber)}.tag-d.green{background:var(--green-soft);color:var(--green)}
+.nd{text-align:center;color:var(--txt4);padding:24px;font-size:11px}
+.more{text-align:center;padding:11px;font-size:11px;color:var(--pri);cursor:pointer;font-family:var(--mono);font-weight:600;margin-top:6px;border-radius:10px}
+.more:hover{background:var(--surface2)}
+.sbar{margin-bottom:14px}
+.sbar input{width:100%;padding:10px 15px;background:var(--surface2);border:1px solid transparent;border-radius:11px;color:var(--txt);font-size:12px;font-family:var(--sans);outline:none;transition:all .12s}
+.sbar input:focus{border-color:var(--pri);background:var(--surface)}
+.sbar input::placeholder{color:var(--txt4)}
+.ruta-bar{display:flex;align-items:center;gap:15px;flex-wrap:wrap;margin-bottom:20px}
+.ruta-sel{padding:11px 16px;background:var(--surface2);border:1px solid var(--pri-light);border-radius:11px;color:var(--pri-dark);font-size:12px;font-family:var(--mono);font-weight:600;cursor:pointer;outline:none;min-width:240px}
+.ruta-sel:focus{border-color:var(--pri)}
+.ruta-info{font-size:11px;color:var(--txt3);font-family:var(--mono)}
+.rkgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:18px}
+.rk{background:var(--surface2);border-radius:13px;padding:14px 16px}
+.rk-v{font-family:var(--mono);font-size:17px;font-weight:600;color:var(--txt)}
+.rk-v.pri{color:var(--pri)}.rk-v.red{color:var(--red)}.rk-v.green{color:var(--green)}.rk-v.amber{color:var(--amber)}
+.rk-l{font-size:8.5px;font-weight:700;letter-spacing:.6px;color:var(--txt4);text-transform:uppercase;margin-top:4px}
+.empty{text-align:center;padding:48px 20px;color:var(--txt4)}
+.empty-t{font-size:14px;font-weight:600;color:var(--txt3)}.empty-s{font-size:11px;margin-top:6px;font-family:var(--mono)}
+@media(max-width:980px){.g2,.g31{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+    <div class="pagehead">
+      <div class="ph-left">
+        <img src="logo.png" alt="Lactolac" class="ph-logo" onerror="this.style.display='none'">
+        <div class="ph-brand">
+          <div class="ph-title">Lactolac El Salvador<span class="tb-badge">INS</span></div>
+          <div class="ph-sub">Cuentas por Cobrar &middot; Canal Institucional</div>
+        </div>
+      </div>
+      <div class="ph-right">
+        <div class="tb-date" id="topdate">&mdash;</div>
+        <div class="live off" id="liveBox"><span class="dot"></span><span id="livestatus">Conectando...</span></div>
+      </div>
+    </div>
+
+    <div class="filters">
+      <div class="fgroup"><span class="fglabel">Mercado</span><div class="chips"><button class="chip fixed">El Salvador</button></div></div>
+      <div class="fgroup"><span class="fglabel">Canal</span><div class="chips"><button class="chip fixed">Institucional</button></div></div>
+    </div>
+
+    <div class="kgrid">
+      <div class="kcard feature"><div class="kc-top"><span class="klabel">Cartera Total</span><span class="karrow">&#8599;</span></div><div class="kval" id="k0">&mdash;</div><div class="ksub" id="k0s">&mdash;</div></div>
+      <div class="kcard"><div class="kc-top"><span class="klabel">Mora General</span><span class="karrow">&#8599;</span></div><div class="kval red" id="k1">&mdash;</div><div class="ksub">del total de cartera</div></div>
+      <div class="kcard"><div class="kc-top"><span class="klabel">No Vencido</span><span class="karrow">&#8599;</span></div><div class="kval green" id="k3">&mdash;</div><div class="ksub" id="k3s">&mdash;</div></div>
+      <div class="kcard"><div class="kc-top"><span class="klabel">Clientes</span><span class="karrow">&#8599;</span></div><div class="kval pri" id="k4">&mdash;</div><div class="ksub">activos en cartera</div></div>
+      <div class="kcard"><div class="kc-top"><span class="klabel">Bloqueados</span><span class="karrow">&#8599;</span></div><div class="kval red" id="k5">&mdash;</div><div class="ksub">bloqueo de pedido</div></div>
+      <div class="kcard"><div class="kc-top"><span class="klabel">Mora +60 d&iacute;as</span><span class="karrow">&#8599;</span></div><div class="kval" id="k6">&mdash;</div><div class="ksub">riesgo alto</div></div>
+      <div class="kcard"><div class="kc-top"><span class="klabel">Contados Vencidos</span><span class="karrow">&#8599;</span></div><div class="kval" id="k7">&mdash;</div><div class="ksub" id="k7s">&mdash;</div></div>
+    </div>
+
+    <div class="sec"><span class="sec-t">Indicador de Mora</span><span class="sec-line"></span></div>
+    <div class="g31">
+      <div class="panel"><div class="panel-h"><span class="panel-t">Antig&uuml;edad de Saldos</span></div><div class="ch ch220"><canvas id="c-ant"></canvas></div></div>
+      <div class="panel"><div class="panel-h"><span class="panel-t">KPI Mora vs Meta 3%</span></div>
+        <div class="gauge-wrap"><div class="gauge-c"><canvas id="c-gauge"></canvas><div class="gauge-lbl"><div class="gauge-v" id="g-val">&mdash;</div><div class="gauge-s">Mora actual</div></div></div>
+          <div class="gauge-meta"><div class="gm"><div class="gm-v" id="g-venc">&mdash;</div><div class="gm-l">Vencido</div></div><div class="gm"><div class="gm-v">3.00%</div><div class="gm-l">Meta</div></div></div></div>
+      </div>
+    </div>
+
+    <div class="sec"><span class="sec-t">Concentraci&oacute;n 80/20</span><span class="sec-line"></span></div>
+    <div class="g2">
+      <div class="panel"><div class="panel-h"><span class="panel-t">80/20 &mdash; Rutas (Vencido)</span><span class="panel-tag" id="pareto-tag">TOP</span></div><div id="pb"></div></div>
+      <div class="panel"><div class="panel-h"><span class="panel-t" style="text-align:right;width:100%">80/20 &mdash; Saldos Totales</span><span class="panel-tag" id="saldos-tag" style="order:-1">TOP</span></div><div id="sb-saldos"></div></div>
+    </div>
+
+    <div class="g2" style="margin-top:15px">
+      <div class="panel"><div class="panel-h"><span class="panel-t">Vencido por Regi&oacute;n</span></div><div class="ch ch220"><canvas id="c-reg"></canvas></div></div>
+      <div class="panel"><div class="panel-h"><span class="panel-t">Top 10 Rutas Vencido vs No Vencido</span></div><div class="ch ch220"><canvas id="c-rut"></canvas></div></div>
+    </div>
+
+    <div class="sec"><span class="sec-t">Clientes y Gesti&oacute;n</span><span class="sec-line"></span></div>
+    <div class="g2">
+      <div class="panel"><div class="panel-h"><span class="panel-t">Top 10 Clientes por Vencido</span></div>
+        <div class="tw"><table><thead><tr><th>#</th><th>Cliente</th><th>Ruta</th><th class="r">D&iacute;as</th><th class="r">Vencido</th><th class="r">% Mora</th></tr></thead><tbody id="tb-top"></tbody></table></div></div>
+      <div class="panel"><div class="panel-h"><span class="panel-t">Sin Bloqueo &mdash; Con Vencido</span><span class="panel-tag" id="alt-tag">&mdash;</span></div>
+        <div class="sbar"><input type="text" id="si-alt" placeholder="Buscar cliente..." oninput="rAlt()"></div>
+        <div class="tscroll"><table><thead><tr><th>Cliente</th><th>Ruta</th><th class="r">D&iacute;as</th><th class="r">Vencido</th></tr></thead><tbody id="tb-alt"></tbody></table></div></div>
+    </div>
+
+    <div class="panel" style="margin-top:15px"><div class="panel-h"><span class="panel-t">Contados Vencidos &mdash; Plazo 0</span><span class="panel-tag" id="cnt-tag">&mdash;</span></div>
+      <div class="sbar"><input type="text" id="si-cnt" placeholder="Buscar cliente..." oninput="rCnt()"></div>
+      <div class="tw"><table><thead><tr><th>#</th><th>Cliente</th><th>Ruta</th><th class="r">D&iacute;as</th><th class="r">Vencido</th><th class="r">Docs</th></tr></thead><tbody id="tb-cnt"></tbody></table></div>
+      <div class="more" id="cnt-more" style="display:none" onclick="cntAll=true;rCnt()">Ver todos</div>
+      <div class="more" id="cnt-less" style="display:none" onclick="cntAll=false;rCnt()">Ver menos</div></div>
+
+    <div class="panel" style="margin-top:15px"><div class="panel-h"><span class="panel-t">Clientes con Bloqueo de Pedido</span><span class="panel-tag" id="blq-tag">&mdash;</span></div>
+      <div class="sbar"><input type="text" id="si-blq" placeholder="Buscar cliente..." oninput="rBlq()"></div>
+      <div class="tw"><table><thead><tr><th>Cliente</th><th>Ruta</th><th class="r">D&iacute;as</th><th class="r">Vencido</th><th class="r">Docs</th></tr></thead><tbody id="tb-blq"></tbody></table></div>
+      <div class="more" id="blq-more" style="display:none" onclick="blqAll=true;rBlq()">Ver todos</div>
+      <div class="more" id="blq-less" style="display:none" onclick="blqAll=false;rBlq()">Ver menos</div></div>
+
+    <div class="sec"><span class="sec-t">An&aacute;lisis Detallado por Ruta</span><span class="sec-line"></span></div>
+    <div class="panel">
+      <div class="ruta-bar"><select class="ruta-sel" id="ruta-sel" onchange="selRuta(this.value)"><option value="">Seleccionar ruta</option></select>
+        <span class="ruta-info" id="ruta-info">Elige una ruta para ver su an&aacute;lisis completo</span></div>
+      <div id="ruta-content" style="display:none">
+        <div class="rkgrid" id="ruta-kpis"></div>
+        <div class="g2" style="margin-bottom:15px">
+          <div class="panel" style="background:var(--surface2);box-shadow:none"><div class="panel-h"><span class="panel-t">Antig&uuml;edad</span></div><div class="ch ch200"><canvas id="rc-ant"></canvas></div></div>
+          <div class="panel" style="background:var(--surface2);box-shadow:none"><div class="panel-h"><span class="panel-t">80/20 Clientes Vencidos</span><span class="panel-tag" id="r-p80-tag">&mdash;</span></div><div id="ruta-pb" style="max-height:210px;overflow-y:auto" class="tscroll"></div></div>
+        </div>
+        <div class="g2">
+          <div class="panel" style="background:var(--surface2);box-shadow:none"><div class="panel-h"><span class="panel-t">Top Clientes</span></div><div class="tw"><table><thead><tr><th>#</th><th>Cliente</th><th class="r">D&iacute;as</th><th class="r">Vencido</th></tr></thead><tbody id="ruta-tb-top"></tbody></table></div></div>
+          <div class="panel" style="background:var(--surface2);box-shadow:none"><div class="panel-h"><span class="panel-t">Bloqueados en Ruta</span><span class="panel-tag" id="r-blq-tag">&mdash;</span></div><div class="tw"><table><thead><tr><th>Cliente</th><th class="r">D&iacute;as</th><th class="r">Vencido</th></tr></thead><tbody id="ruta-tb-blq"></tbody></table></div></div>
+        </div>
+      </div>
+      <div id="ruta-empty" class="empty"><div class="empty-t">Selecciona una ruta</div><div class="empty-s">KPIs, 80/20, antig&uuml;edad y bloqueados</div></div>
+    </div>
+</div>
+<script>
+var CD={"kpi":{"cartera":1616848,"vencido":123362,"noVencido":1493486,"pctMora":7.63,"clientes":114,"bloqueados":6,"mora60":252,"docs":1524,"contados":5588,"cCli":28},"ant":[121097,2013,35,91,126],"reg":[118081,3103,1107,1072,0],"rutas":{"labels":["INS001","INS004","INS002"],"v":[57073,42617,26585],"nv":[127555,200704,89292]},"pareto":[{"r":"INS001","v":57073,"a":45.2},{"r":"INS004","v":42617,"a":78.9},{"r":"INS002","v":26585,"a":100.0}],"saldos":[{"n":"DON POLLO, S.A. DE C.V.","v":711524},{"n":"POLLO CAMPERO DE EL SALVADOR S.A DE","v":361498},{"n":"AL FORNO S.A. DE C.V.","v":98542},{"n":"PRICESMART EL SALVADOR S.A. DE C.V.","v":59237},{"n":"KRISPY'S, S.A. DE C.V.","v":50724},{"n":"SW INVENTA, S.A. DE C.V.","v":35490},{"n":"NEGOCIOS CAMYRAN, S.A. DE C.V.","v":28959},{"n":"PRODUCTOS ALIMENTICIOS","v":28372},{"n":"LAS CAPRICHOSAS S.A. DE C.V.","v":23812},{"n":"CLUB DE PLAYA SALINITAS, S.A. DE C.","v":15283}],"top":[{"n":"AL FORNO S.A. DE C.V.","c":"Institucional","ru":"INS001","v":43892,"d":10,"pct":45},{"n":"PRODUCTOS ALIMENTICIOS","c":"Institucional","ru":"INS002","v":12316,"d":8,"pct":43},{"n":"KRISPY'S, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":9308,"d":11,"pct":18},{"n":"PRICESMART EL SALVADOR S.A. DE C.V.","c":"Institucional","ru":"INS004","v":8841,"d":38,"pct":15},{"n":"LAS CAPRICHOSAS S.A. DE C.V.","c":"Institucional","ru":"INS004","v":4941,"d":11,"pct":21},{"n":"DILMA EUNICE RIVERA BONILLA","c":"Institucional","ru":"INS002","v":3610,"d":3,"pct":31},{"n":"GRUPO MUFASSA, S.P.A.S. DE C.V.","c":"Institucional","ru":"INS004","v":3334,"d":88,"pct":100},{"n":"POLLO CAMPESTRE, S.A. DE C.V.","c":"Institucional","ru":"INS002","v":3088,"d":37,"pct":67},{"n":"CRIO INVERSIONES, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":2895,"d":58,"pct":53},{"n":"INVERSIONES EL COPINOL, S.A. DE C.V","c":"Institucional","ru":"INS004","v":2625,"d":16,"pct":86},{"n":"NOVIZZIMA S.A DE C.V","c":"Institucional","ru":"INS004","v":2608,"d":11,"pct":41},{"n":"CARDAGER S.A. DE C.V.","c":"Institucional","ru":"INS001","v":2195,"d":8,"pct":25},{"n":"FOOD TRENDS, S.A. DE C.V.","c":"Institucional","ru":"INS001","v":2111,"d":366,"pct":17},{"n":"HOTELES E INVERSIONES, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":1764,"d":7,"pct":27},{"n":"ETCETERA, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":1623,"d":15,"pct":45},{"n":"COMIDAS Y FRANQUICIAS DE EL SALVADO","c":"Institucional","ru":"INS001","v":1433,"d":45,"pct":34},{"n":"VITELIOS CENTROAMERICA  S.A. DE C.V","c":"Institucional","ru":"INS004","v":1377,"d":8,"pct":32},{"n":"SERVAMATIC S.A. DE C.V.","c":"Institucional","ru":"INS001","v":1367,"d":9,"pct":36},{"n":"POLANCO RAMIREZ S.A. DE C.V.","c":"Institucional","ru":"INS002","v":1099,"d":4,"pct":100},{"n":"INVERSIONES PAMAY MA,","c":"Institucional","ru":"INS001","v":1043,"d":10,"pct":24}],"alt":[{"n":"FOOD TRENDS, S.A. DE C.V.","c":"Institucional","ru":"INS001","v":2121,"d":144},{"n":"GCG FOOD S.A. DE C.V.","c":"Institucional","ru":"INS001","v":310,"d":99},{"n":"CRIO INVERSIONES, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":2895,"d":58},{"n":"SISTEMAS COMESTIBLES, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":1375,"d":45},{"n":"PRICESMART EL SALVADOR S.A. DE C.V.","c":"Institucional","ru":"INS004","v":8841,"d":38},{"n":"NEGOCIOS CAMYRAN, S.A. DE C.V.","c":"Institucional","ru":"INS002","v":134,"d":33},{"n":"ALIMENTOS & CONGELADOS, S.A. DE C.V","c":"Institucional","ru":"INS002","v":717,"d":24},{"n":"COMIDAS Y FRANQUICIAS DE EL SALVADO","c":"Institucional","ru":"INS001","v":1435,"d":21},{"n":"CORPORACION JV DE CENTROAMERICA S.A","c":"Institucional","ru":"INS001","v":647,"d":20},{"n":"POLLO CAMPESTRE, S.A. DE C.V.","c":"Institucional","ru":"INS002","v":3500,"d":20},{"n":"CASTRO PAREDES, JUAN CARLOS","c":"Institucional","ru":"INS001","v":110,"d":20},{"n":"GRUPO LEK S.A DE C.V","c":"Institucional","ru":"INS004","v":157,"d":20},{"n":"ENTRETENIMIENTO Y DIVERSIONES, S.A.","c":"Institucional","ru":"INS001","v":334,"d":19},{"n":"SE\u00d1OR GAUCHO ASADOS A LE\u00d1A, S.A. DE","c":"Institucional","ru":"INS001","v":249,"d":19},{"n":"LAS FAJITAS, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":179,"d":19},{"n":"INVERSIONES EL COPINOL, S.A. DE C.V","c":"Institucional","ru":"INS004","v":2625,"d":16},{"n":"GERARDO JOS\u00c9, PEREZ RUIZ S.A. DE C.","c":"Institucional","ru":"INS001","v":327,"d":16},{"n":"LAS FAJITAS, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":201,"d":16},{"n":"JOSE ERAZMO PEREZ JIMENEZ","c":"Institucional","ru":"INS004","v":149,"d":16},{"n":"MIJANGOS ENTERPRISES S.A. DE C.V.","c":"Institucional","ru":"INS004","v":346,"d":16},{"n":"ETCETERA, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":1623,"d":15},{"n":"INVERSIONES CASA CAMPO S.A. DE C.V.","c":"Institucional","ru":"INS004","v":127,"d":15},{"n":"RINCON CULINARIO, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":115,"d":15},{"n":"HUGO ROBERT GARCIA VILLATORO","c":"Institucional","ru":"INS002","v":972,"d":15},{"n":"JOSE ERAZMO PEREZ JIMENEZ","c":"Institucional","ru":"INS001","v":124,"d":14},{"n":"SE\u00d1OR GAUCHO ASADOS A LE\u00d1A S.A. DE","c":"Institucional","ru":"INS004","v":78,"d":14},{"n":"LAS FAJITAS, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":85,"d":14},{"n":"SE\u00d1OR GAUCHO ASADOS A LE\u00d1A S.A. DE","c":"Institucional","ru":"INS001","v":148,"d":14},{"n":"LAS CAPRICHOSAS S.A. DE C.V.","c":"Institucional","ru":"INS004","v":4941,"d":11},{"n":"KRISPY'S, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":9308,"d":11},{"n":"NOVIZZIMA S.A DE C.V","c":"Institucional","ru":"INS004","v":2608,"d":11},{"n":"AL FORNO S.A. DE C.V.","c":"Institucional","ru":"INS001","v":43892,"d":10},{"n":"INVERSIONES PAMAY MA,","c":"Institucional","ru":"INS001","v":1043,"d":10},{"n":"BISTROS, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":670,"d":10},{"n":"SERVAMATIC S.A. DE C.V.","c":"Institucional","ru":"INS001","v":1562,"d":9},{"n":"ORIENTAL WOK, S.A. DE C.V.","c":"Institucional","ru":"INS001","v":308,"d":9},{"n":"INVERSIONES GASTRONOMICAS, S.A. DE","c":"Institucional","ru":"INS004","v":481,"d":9},{"n":"ITSMO PARAISO, S.A. DE C.V.","c":"Institucional","ru":"INS002","v":176,"d":9},{"n":"CARDAGER S.A. DE C.V.","c":"Institucional","ru":"INS001","v":2195,"d":8},{"n":"ALISAL, S.A. DE C.V.","c":"Institucional","ru":"INS002","v":811,"d":8},{"n":"VITELIOS CENTROAMERICA  S.A. DE C.V","c":"Institucional","ru":"INS004","v":1377,"d":8},{"n":"SKALA MEDIA S.A. DE C.V.","c":"Institucional","ru":"INS002","v":414,"d":8},{"n":"INVERSIONES GEVASE S.A. DE C.V.","c":"Institucional","ru":"INS004","v":13,"d":8},{"n":"SE\u00d1OR GAUCHO ASADOS A LE\u00d1A, S.A. DE","c":"Institucional","ru":"INS002","v":14,"d":8},{"n":"HOTELES E INVERSIONES, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":1764,"d":7},{"n":"LAS FAJITAS, S.A. DE C.V.","c":"Institucional","ru":"INS001","v":39,"d":7},{"n":"MEETS INTERNATIONAL S.A. DE C.V.","c":"Institucional","ru":"INS004","v":202,"d":6},{"n":"BRODERS, S.A. DE C.V.","c":"Institucional","ru":"INS001","v":276,"d":6},{"n":"BLANCO DE BETTAGLIO, DIANA MARIA","c":"Institucional","ru":"INS004","v":174,"d":6},{"n":"INVERSIONES MARIEL S.A. DE C.V.","c":"Institucional","ru":"INS004","v":88,"d":4}],"cnt":[{"n":"GRUPO MUFASSA, S.P.A.S. DE C.V.","c":"Institucional","ru":"INS004","v":3334,"d":88,"dc":1},{"n":"R D P, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":255,"d":55,"dc":2},{"n":"ALIMENTOS & CONGELADOS, S.A. DE C.V","c":"Institucional","ru":"INS002","v":717,"d":24,"dc":2},{"n":"POLLO CAMPESTRE, S.A. DE C.V.","c":"Institucional","ru":"INS002","v":39,"d":20,"dc":1},{"n":"CASTRO PAREDES, JUAN CARLOS","c":"Institucional","ru":"INS001","v":110,"d":20,"dc":3},{"n":"GRUPO LEK S.A DE C.V","c":"Institucional","ru":"INS004","v":157,"d":20,"dc":1},{"n":"MIJANGOS ENTERPRISES S.A. DE C.V.","c":"Institucional","ru":"INS004","v":341,"d":16,"dc":6},{"n":"ITSMO PARAISO, S.A. DE C.V.","c":"Institucional","ru":"INS002","v":176,"d":9,"dc":2},{"n":"BLANCO DE BETTAGLIO, DIANA MARIA","c":"Institucional","ru":"INS004","v":174,"d":6,"dc":2},{"n":"RAMIREZ CORNEJO HERIBERTO ALEXANDER","c":"Institucional","ru":"INS004","v":25,"d":4,"dc":1},{"n":"POLANCO RAMIREZ S.A. DE C.V.","c":"Institucional","ru":"INS002","v":1099,"d":4,"dc":1},{"n":"MICOMI, S.A. DE C.V.","c":"Institucional","ru":"INS001","v":657,"d":4,"dc":1},{"n":"PRODUCCIONES DEL ESTE DOS MIL DOS,","c":"Institucional","ru":"INS002","v":67,"d":3,"dc":1},{"n":"SISTEMAS ALIMENTICIOS INTEGRALES S.","c":"Institucional","ru":"INS004","v":204,"d":3,"dc":1},{"n":"INNOVACIONES ALIMENTICAS SALVADORE\u00d1","c":"Institucional","ru":"INS001","v":137,"d":1,"dc":1},{"n":"ASESORIA Y ALIMENTOS, S.A DE C.V.","c":"Institucional","ru":"INS001","v":146,"d":1,"dc":1},{"n":"SANCHEZ BRUNO S.A. DE C.V.","c":"Institucional","ru":"INS001","v":27,"d":1,"dc":1}],"bloq":[{"n":"PRODUCTOS ALIMENTICIOS","ru":"INS002","c":"Institucional","v":12316,"d":8,"dc":15},{"n":"GRUPO MUFASSA, S.P.A.S. DE C.V.","ru":"INS004","c":"Institucional","v":3334,"d":88,"dc":1},{"n":"R D P, S.A. DE C.V.","ru":"INS004","c":"Institucional","v":255,"d":55,"dc":2},{"n":"CHAVEZ DIAZ, S.A. DE C.V.","ru":"INS001","c":"Institucional","v":118,"d":462,"dc":2},{"n":"URIBE CASTRO, MIGUEL JOSE","ru":"INS001","c":"Institucional","v":0,"d":98,"dc":2},{"n":"CAFE BARISTA ESA, S.A. DE C.V.","ru":"INS001","c":"Institucional","v":0,"d":17,"dc":2}]};
+var RUTA_DATA={"INS001":{"canal":"Institucional","plantel":"San Salvador","region":"CENTRAL","agente":"ERNESTO","kpi":{"cartera":184628,"vencido":57073,"noVencido":127555,"pctMora":30.91,"clientes":46,"bloqueados":3,"mora60":45,"docs":400,"contados":0,"cCli":12},"ant":[57030,0,0,294,126],"clientes":[{"n":"AL FORNO S.A. DE C.V.","c":"Institucional","ru":"INS001","v":43892,"d":10,"pct":45},{"n":"PRICESMART EL SALVADOR S.A. DE C.V.","c":"Institucional","ru":"INS001","v":2353,"d":3,"pct":15},{"n":"FOOD TRENDS, S.A. DE C.V.","c":"Institucional","ru":"INS001","v":2111,"d":366,"pct":17},{"n":"SERVAMATIC S.A. DE C.V.","c":"Institucional","ru":"INS001","v":1367,"d":9,"pct":36},{"n":"CARDAGER S.A. DE C.V.","c":"Institucional","ru":"INS001","v":1164,"d":8,"pct":32},{"n":"INVERSIONES PAMAY MA,","c":"Institucional","ru":"INS001","v":871,"d":10,"pct":29},{"n":"MICOMI, S.A. DE C.V.","c":"Institucional","ru":"INS001","v":657,"d":4,"pct":100},{"n":"LAS CAPRICHOSAS S.A. DE C.V.","c":"Institucional","ru":"INS001","v":616,"d":10,"pct":16},{"n":"TACOLOGY  S.A. DE C.V.","c":"Institucional","ru":"INS001","v":470,"d":1,"pct":21},{"n":"SANTABURGUESA, S.A. DE C.V.","c":"Institucional","ru":"INS001","v":418,"d":1,"pct":36},{"n":"GRUPO URIBE S.A. DE C.V.","c":"Institucional","ru":"INS001","v":415,"d":2,"pct":29},{"n":"COMIDAS Y FRANQUICIAS DE EL SALVADO","c":"Institucional","ru":"INS001","v":362,"d":45,"pct":37},{"n":"ENTRETENIMIENTO Y DIVERSIONES, S.A.","c":"Institucional","ru":"INS001","v":334,"d":19,"pct":100},{"n":"GERARDO JOS\u00c9, PEREZ RUIZ S.A. DE C.","c":"Institucional","ru":"INS001","v":327,"d":16,"pct":64},{"n":"BISTROS, S.A. DE C.V.","c":"Institucional","ru":"INS001","v":322,"d":9,"pct":42},{"n":"ORIENTAL WOK, S.A. DE C.V.","c":"Institucional","ru":"INS001","v":308,"d":9,"pct":25},{"n":"BRODERS, S.A. DE C.V.","c":"Institucional","ru":"INS001","v":276,"d":6,"pct":21},{"n":"SE\u00d1OR GAUCHO ASADOS A LE\u00d1A, S.A. DE","c":"Institucional","ru":"INS001","v":212,"d":90,"pct":63},{"n":"CORPORACION JV DE CENTROAMERICA S.A","c":"Institucional","ru":"INS001","v":202,"d":20,"pct":19},{"n":"SE\u00d1OR GAUCHO ASADOS A LE\u00d1A S.A. DE","c":"Institucional","ru":"INS001","v":148,"d":14,"pct":46}],"pareto80":[{"n":"AL FORNO S.A. DE C.V.","v":43892,"a":75.9},{"n":"PRICESMART EL SALVADOR S.A. DE C.V.","v":2353,"a":80.0},{"n":"FOOD TRENDS, S.A. DE C.V.","v":2111,"a":83.6},{"n":"SERVAMATIC S.A. DE C.V.","v":1367,"a":86.0},{"n":"CARDAGER S.A. DE C.V.","v":1164,"a":88.0},{"n":"INVERSIONES PAMAY MA,","v":871,"a":89.5},{"n":"MICOMI, S.A. DE C.V.","v":657,"a":90.6},{"n":"LAS CAPRICHOSAS S.A. DE C.V.","v":616,"a":91.7},{"n":"TACOLOGY  S.A. DE C.V.","v":470,"a":92.5},{"n":"SANTABURGUESA, S.A. DE C.V.","v":418,"a":93.2},{"n":"GRUPO URIBE S.A. DE C.V.","v":415,"a":94.0},{"n":"COMIDAS Y FRANQUICIAS DE EL SALVADO","v":362,"a":94.6},{"n":"ENTRETENIMIENTO Y DIVERSIONES, S.A.","v":334,"a":95.2},{"n":"GERARDO JOS\u00c9, PEREZ RUIZ S.A. DE C.","v":327,"a":95.7},{"n":"BISTROS, S.A. DE C.V.","v":322,"a":96.3}],"bloq":[{"n":"CHAVEZ DIAZ, S.A. DE C.V.","ru":"INS001","c":"Institucional","v":118,"d":462,"dc":2},{"n":"URIBE CASTRO, MIGUEL JOSE","ru":"INS001","c":"Institucional","v":0,"d":98,"dc":2},{"n":"CAFE BARISTA ESA, S.A. DE C.V.","ru":"INS001","c":"Institucional","v":0,"d":17,"dc":2}]},"INS002":{"canal":"Institucional","plantel":"San Salvador","region":"CENTRAL","agente":"ERNESTO","kpi":{"cartera":115877,"vencido":26585,"noVencido":89292,"pctMora":22.94,"clientes":30,"bloqueados":1,"mora60":0,"docs":380,"contados":2098,"cCli":5},"ant":[26529,56,0,0,0],"clientes":[{"n":"PRODUCTOS ALIMENTICIOS","c":"Institucional","ru":"INS002","v":12316,"d":8,"pct":43},{"n":"DILMA EUNICE RIVERA BONILLA","c":"Institucional","ru":"INS002","v":3610,"d":3,"pct":31},{"n":"POLLO CAMPESTRE, S.A. DE C.V.","c":"Institucional","ru":"INS002","v":3088,"d":37,"pct":67},{"n":"PRICESMART EL SALVADOR S.A. DE C.V.","c":"Institucional","ru":"INS002","v":2075,"d":31,"pct":18},{"n":"POLANCO RAMIREZ S.A. DE C.V.","c":"Institucional","ru":"INS002","v":1099,"d":4,"pct":100},{"n":"ALISAL, S.A. DE C.V.","c":"Institucional","ru":"INS002","v":811,"d":8,"pct":31},{"n":"HUGO ROBERT GARCIA VILLATORO","c":"Institucional","ru":"INS002","v":788,"d":15,"pct":60},{"n":"ALIMENTOS & CONGELADOS, S.A. DE C.V","c":"Institucional","ru":"INS002","v":717,"d":24,"pct":100},{"n":"CARDAGER S.A. DE C.V.","c":"Institucional","ru":"INS002","v":526,"d":8,"pct":22},{"n":"ALVAREZ PADILLA S.A. DE C.V.","c":"Institucional","ru":"INS002","v":414,"d":2,"pct":25},{"n":"SKALA MEDIA S.A. DE C.V.","c":"Institucional","ru":"INS002","v":414,"d":8,"pct":51},{"n":"SERVICIOS FAMA S.A DE C.V","c":"Institucional","ru":"INS002","v":234,"d":1,"pct":23},{"n":"ITSMO PARAISO, S.A. DE C.V.","c":"Institucional","ru":"INS002","v":176,"d":9,"pct":100},{"n":"NEGOCIOS CAMYRAN, S.A. DE C.V.","c":"Institucional","ru":"INS002","v":134,"d":33,"pct":2},{"n":"BISTROS, S.A. DE C.V.","c":"Institucional","ru":"INS002","v":102,"d":9,"pct":57},{"n":"PRODUCCIONES DEL ESTE DOS MIL DOS,","c":"Institucional","ru":"INS002","v":67,"d":3,"pct":100},{"n":"SE\u00d1OR GAUCHO ASADOS A LE\u00d1A, S.A. DE","c":"Institucional","ru":"INS002","v":14,"d":8,"pct":32}],"pareto80":[{"n":"PRODUCTOS ALIMENTICIOS","v":12316,"a":46.3},{"n":"DILMA EUNICE RIVERA BONILLA","v":3610,"a":59.9},{"n":"POLLO CAMPESTRE, S.A. DE C.V.","v":3088,"a":71.5},{"n":"PRICESMART EL SALVADOR S.A. DE C.V.","v":2075,"a":79.3},{"n":"POLANCO RAMIREZ S.A. DE C.V.","v":1099,"a":83.5},{"n":"ALISAL, S.A. DE C.V.","v":811,"a":86.5},{"n":"HUGO ROBERT GARCIA VILLATORO","v":788,"a":89.5},{"n":"ALIMENTOS & CONGELADOS, S.A. DE C.V","v":717,"a":92.2},{"n":"CARDAGER S.A. DE C.V.","v":526,"a":94.2},{"n":"ALVAREZ PADILLA S.A. DE C.V.","v":414,"a":95.7},{"n":"SKALA MEDIA S.A. DE C.V.","v":414,"a":97.3},{"n":"SERVICIOS FAMA S.A DE C.V","v":234,"a":98.1},{"n":"ITSMO PARAISO, S.A. DE C.V.","v":176,"a":98.8},{"n":"NEGOCIOS CAMYRAN, S.A. DE C.V.","v":134,"a":99.3},{"n":"BISTROS, S.A. DE C.V.","v":102,"a":99.7}],"bloq":[{"n":"PRODUCTOS ALIMENTICIOS","ru":"INS002","c":"Institucional","v":12316,"d":8,"dc":15}]},"INS004":{"canal":"Institucional","plantel":"San Salvador","region":"CENTRAL","agente":"ERNESTO","kpi":{"cartera":243321,"vencido":42617,"noVencido":200704,"pctMora":17.51,"clientes":61,"bloqueados":2,"mora60":3120,"docs":680,"contados":3811,"cCli":11},"ant":[37538,1960,3323,0,0],"clientes":[{"n":"KRISPY'S, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":9308,"d":11,"pct":18},{"n":"PRICESMART EL SALVADOR S.A. DE C.V.","c":"Institucional","ru":"INS004","v":4413,"d":38,"pct":14},{"n":"LAS CAPRICHOSAS S.A. DE C.V.","c":"Institucional","ru":"INS004","v":4325,"d":11,"pct":22},{"n":"GRUPO MUFASSA, S.P.A.S. DE C.V.","c":"Institucional","ru":"INS004","v":3334,"d":88,"pct":100},{"n":"CRIO INVERSIONES, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":2895,"d":58,"pct":53},{"n":"INVERSIONES EL COPINOL, S.A. DE C.V","c":"Institucional","ru":"INS004","v":2625,"d":16,"pct":86},{"n":"NOVIZZIMA S.A DE C.V","c":"Institucional","ru":"INS004","v":2608,"d":11,"pct":41},{"n":"HOTELES E INVERSIONES, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":1764,"d":7,"pct":27},{"n":"ETCETERA, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":1623,"d":15,"pct":45},{"n":"VITELIOS CENTROAMERICA  S.A. DE C.V","c":"Institucional","ru":"INS004","v":1377,"d":8,"pct":32},{"n":"COMIDAS Y FRANQUICIAS DE EL SALVADO","c":"Institucional","ru":"INS004","v":1070,"d":21,"pct":33},{"n":"SISTEMAS COMESTIBLES, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":1001,"d":45,"pct":7},{"n":"ICHA INVERSIONES, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":752,"d":1,"pct":10},{"n":"CARDAGER S.A. DE C.V.","c":"Institucional","ru":"INS004","v":506,"d":8,"pct":19},{"n":"HPR NEGOCIOS S.A. DE C.V.","c":"Institucional","ru":"INS004","v":488,"d":3,"pct":23},{"n":"INVERSIONES GASTRONOMICAS, S.A. DE","c":"Institucional","ru":"INS004","v":481,"d":9,"pct":55},{"n":"TRAMSAL, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":479,"d":1,"pct":19},{"n":"SANTABURGUESA, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":429,"d":64,"pct":17},{"n":"MIJANGOS ENTERPRISES S.A. DE C.V.","c":"Institucional","ru":"INS004","v":341,"d":16,"pct":100},{"n":"R D P, S.A. DE C.V.","c":"Institucional","ru":"INS004","v":255,"d":55,"pct":100}],"pareto80":[{"n":"KRISPY'S, S.A. DE C.V.","v":9308,"a":21.7},{"n":"PRICESMART EL SALVADOR S.A. DE C.V.","v":4413,"a":32.0},{"n":"LAS CAPRICHOSAS S.A. DE C.V.","v":4325,"a":42.1},{"n":"GRUPO MUFASSA, S.P.A.S. DE C.V.","v":3334,"a":49.8},{"n":"CRIO INVERSIONES, S.A. DE C.V.","v":2895,"a":56.6},{"n":"INVERSIONES EL COPINOL, S.A. DE C.V","v":2625,"a":62.7},{"n":"NOVIZZIMA S.A DE C.V","v":2608,"a":68.8},{"n":"HOTELES E INVERSIONES, S.A. DE C.V.","v":1764,"a":72.9},{"n":"ETCETERA, S.A. DE C.V.","v":1623,"a":76.7},{"n":"VITELIOS CENTROAMERICA  S.A. DE C.V","v":1377,"a":79.9},{"n":"COMIDAS Y FRANQUICIAS DE EL SALVADO","v":1070,"a":82.4},{"n":"SISTEMAS COMESTIBLES, S.A. DE C.V.","v":1001,"a":84.7},{"n":"ICHA INVERSIONES, S.A. DE C.V.","v":752,"a":86.5},{"n":"CARDAGER S.A. DE C.V.","v":506,"a":87.6},{"n":"HPR NEGOCIOS S.A. DE C.V.","v":488,"a":88.8}],"bloq":[{"n":"GRUPO MUFASSA, S.P.A.S. DE C.V.","ru":"INS004","c":"Institucional","v":3334,"d":88,"dc":1},{"n":"R D P, S.A. DE C.V.","ru":"INS004","c":"Institucional","v":255,"d":55,"dc":2}]},"INS006":{"canal":"Institucional","plantel":"San Salvador","region":"CENTRAL","agente":"ERNESTO","kpi":{"cartera":1073022,"vencido":0,"noVencido":1075934,"pctMora":0,"clientes":2,"bloqueados":0,"mora60":0,"docs":64,"contados":0,"cCli":0},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]}};
+var ROUTE_LIST=[{"id":"INS001","canal":"Institucional","plantel":"San Salvador","region":"CENTRAL","vencido":57073,"pctMora":30.91,"clientes":46},{"id":"INS004","canal":"Institucional","plantel":"San Salvador","region":"CENTRAL","vencido":42617,"pctMora":17.51,"clientes":61},{"id":"INS002","canal":"Institucional","plantel":"San Salvador","region":"CENTRAL","vencido":26585,"pctMora":22.94,"clientes":30},{"id":"INS006","canal":"Institucional","plantel":"San Salvador","region":"CENTRAL","vencido":0,"pctMora":0,"clientes":2}];
+var AGENTE_DATA={};
+var CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vThp3ELURgROgYgiUkDDOB5qQSzDfW6xEoav8ICsVXxsV-sBg0CllsH9yBLj1MdsOJiIIsdjAUiOmSc/pub?gid=0&single=true&output=csv';
+var CANAL='Institucional';
+var HAS_AG=false;
+var fAg='todos';
+var cntAll=false,blqAll=false;
+var PRI='#4F46E5';
+var TT={backgroundColor:'#1B2733',titleColor:'#B0BBB6',bodyColor:'#fff',borderWidth:0,padding:11,cornerRadius:9,displayColors:false,titleFont:{family:'IBM Plex Mono',size:11},bodyFont:{family:'IBM Plex Mono',size:12,weight:'600'}};
+var GRID='rgba(0,0,0,.06)',TICK='#8B9893';
+
+function fmt(v){return '$'+Math.round(Math.max(v||0,0)).toLocaleString('en-US');}
+function fS(v){v=Math.max(v||0,0);return v>=1e6?'$'+(v/1e6).toFixed(1)+'M':v>=1000?'$'+(v/1000).toFixed(0)+'K':'$'+Math.round(v);}
+function stripePattern(color){var c=document.createElement('canvas');c.width=8;c.height=8;var x=c.getContext('2d');x.fillStyle=color;x.fillRect(0,0,8,8);x.strokeStyle='rgba(255,255,255,.4)';x.lineWidth=2;x.beginPath();x.moveTo(0,8);x.lineTo(8,0);x.moveTo(-2,2);x.lineTo(2,-2);x.moveTo(6,10);x.lineTo(10,6);x.stroke();return x.createPattern(c,'repeat');}
+
+// Data source: if agente filter active (Detalle), use AGENTE_DATA, else canal data CD
+function D(){
+  if(HAS_AG&&fAg!=='todos'&&AGENTE_DATA[fAg])return AGENTE_DATA[fAg];
+  return CD;
+}
+function gk(){return D().kpi||{};}
+function ga(){return (D().ant||[0,0,0,0,0]).map(function(v){return Math.max(v,0);});}
+function greg(){return CD.reg||[0,0,0,0,0];}
+function grutas(){return D().rutas||{labels:[],v:[],nv:[]};}
+function gpareto(){return D().pareto||[];}
+function gsaldos(){return D().saldos||[];}
+function gtop(){return D().top||[];}
+function galt(){return D().alt||[];}
+function gcnt(){return D().cnt||[];}
+function gbloq(){return D().bloq||[];}
+
+function acN(el,t){if(!el)return;var s=performance.now(),pv=el._t||0;el._t=t;(function tk(n){if(el._t!==t)return;var p=Math.min((n-s)/700,1),e=1-Math.pow(1-p,3);el.textContent=fmt(pv+(t-pv)*e);if(p<1)requestAnimationFrame(tk);})(s);}
+function acI(el,t){if(!el)return;var s=performance.now(),pv=el._t||0;el._t=t;(function tk(n){if(el._t!==t)return;var p=Math.min((n-s)/600,1),e=1-Math.pow(1-p,3);el.textContent=Math.round(pv+(t-pv)*e).toLocaleString();if(p<1)requestAnimationFrame(tk);})(s);}
+function acP(el,t){if(!el)return;var s=performance.now(),pv=el._p||0;el._p=t;(function tk(n){if(el._p!==t)return;var p=Math.min((n-s)/700,1),e=1-Math.pow(1-p,3);el.textContent=(pv+(t-pv)*e).toFixed(2)+'%';if(p<1)requestAnimationFrame(tk);})(s);}
+
+function uKPI(){
+  var k=gk();
+  acN(document.getElementById('k0'),k.cartera||0);acP(document.getElementById('k1'),k.pctMora||0);
+  acN(document.getElementById('k3'),k.noVencido||0);acI(document.getElementById('k4'),k.clientes||0);
+  acI(document.getElementById('k5'),k.bloqueados||0);acN(document.getElementById('k6'),k.mora60||0);
+  acN(document.getElementById('k7'),k.contados||0);
+  document.getElementById('k0s').innerHTML='<span class="ktrend up">'+(k.docs||0).toLocaleString()+'</span> documentos';
+  document.getElementById('k3s').textContent=(100-(k.pctMora||0)).toFixed(1)+'% de cartera';
+  document.getElementById('k7s').textContent=(k.cCli||0)+' clientes';
+}
+
+function uAgentes(){
+  if(!HAS_AG)return;
+  var wrap=document.getElementById('agcards');if(!wrap)return;wrap.innerHTML='';
+  // "Todos" card
+  var names=Object.keys(AGENTE_DATA);
+  var allCard=document.createElement('div');
+  allCard.className='acard'+(fAg==='todos'?' active':'');
+  var ck=CD.kpi||{};
+  allCard.innerHTML='<div class="acard-top"><span class="acard-name">Todos los agentes</span><span class="acard-tag">ALL</span></div><div class="acard-val">'+fS(ck.vencido||0)+'</div><div class="acard-sub">'+fS(ck.cartera||0)+' &middot; '+(ck.pctMora||0).toFixed(1)+'% mora</div><div class="acard-bar"><div class="acard-barf" style="width:'+Math.min((ck.pctMora||0)*2,100)+'%"></div></div>';
+  allCard.onclick=function(){fAg='todos';selRuta('');document.getElementById('ruta-sel').value='';initRutaSel();uAll();};
+  wrap.appendChild(allCard);
+  names.forEach(function(ag){
+    var k=AGENTE_DATA[ag].kpi||{};
+    var el=document.createElement('div');
+    el.className='acard'+(fAg===ag?' active':'');
+    var nm=ag.split(' ').map(function(w){return w.charAt(0)+w.slice(1).toLowerCase();}).join(' ');
+    el.innerHTML='<div class="acard-top"><span class="acard-name">'+nm+'</span><span class="acard-tag">'+(k.clientes||0)+' CLI</span></div><div class="acard-val">'+fS(k.vencido||0)+'</div><div class="acard-sub">'+fS(k.cartera||0)+' &middot; '+(k.pctMora||0).toFixed(1)+'% mora</div><div class="acard-bar"><div class="acard-barf" style="width:'+Math.min((k.pctMora||0)*2,100)+'%"></div></div>';
+    el.onclick=function(){fAg=ag;selRuta('');document.getElementById('ruta-sel').value='';initRutaSel();uAll();};
+    wrap.appendChild(el);
+  });
+}
+
+var CH={};
+function mkChart(id,el,cfg){if(CH[id])CH[id].destroy();CH[id]=new Chart(el,cfg);}
+function bAnt(){
+  var d=ga(),lbl=['1-30d','31-60d','61-90d','91-120d','+120d'];
+  var mx=Math.max.apply(null,d.concat([1])),mxi=d.indexOf(mx);
+  var cols=d.map(function(v,i){return i===mxi?PRI:stripePattern(PRI);});
+  mkChart('ant',document.getElementById('c-ant'),{type:'bar',data:{labels:lbl,datasets:[{data:d,backgroundColor:cols,borderRadius:14,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:Object.assign({},TT,{callbacks:{label:function(c){return fmt(c.raw);}}})},scales:{y:{beginAtZero:true,ticks:{callback:function(v){return fS(v);},color:TICK,font:{family:'IBM Plex Mono',size:10}},grid:{color:GRID,drawBorder:false}},x:{ticks:{color:TICK,font:{family:'IBM Plex Mono',size:10}},grid:{display:false}}}}});
+}
+function bGauge(){
+  var k=gk(),pct=Math.min(k.pctMora||0,100);
+  var gv=document.getElementById('g-val');gv.textContent=(k.pctMora||0).toFixed(2)+'%';
+  gv.style.color=pct>15?'#E04F5F':pct>3?'#E8A13A':'#1B9E6F';
+  document.getElementById('g-venc').textContent=fS(k.vencido||0);
+  var col=pct>15?'#E04F5F':pct>3?'#E8A13A':'#1B9E6F';
+  mkChart('gauge',document.getElementById('c-gauge'),{type:'doughnut',data:{datasets:[{data:[pct,100-pct],backgroundColor:[col,'rgba(0,0,0,.06)'],borderWidth:0,circumference:180,rotation:270}]},options:{responsive:true,maintainAspectRatio:false,cutout:'72%',plugins:{legend:{display:false},tooltip:{enabled:false}}}});
+}
+function bReg(){
+  var regs=['Central','Oriental','Occidental','Paracentral','Afiliadas'],d=greg();
+  mkChart('reg',document.getElementById('c-reg'),{type:'bar',data:{labels:regs,datasets:[{data:d,backgroundColor:PRI,borderRadius:12,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:Object.assign({},TT,{callbacks:{label:function(c){return fmt(c.raw);}}})},scales:{x:{beginAtZero:true,ticks:{callback:function(v){return fS(v);},color:TICK,font:{family:'IBM Plex Mono',size:10}},grid:{color:GRID,drawBorder:false}},y:{ticks:{color:TICK,font:{family:'IBM Plex Sans',size:10}},grid:{display:false}}}}});
+}
+function bRut(){
+  var d=grutas();
+  mkChart('rut',document.getElementById('c-rut'),{type:'bar',data:{labels:d.labels,datasets:[{label:'Vencido',data:d.v,backgroundColor:stripePattern('#E04F5F'),borderRadius:10,borderSkipped:false},{label:'No Vencido',data:d.nv,backgroundColor:stripePattern(PRI),borderRadius:10,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:TICK,font:{family:'IBM Plex Mono',size:10},boxWidth:9,boxHeight:9,usePointStyle:true,pointStyle:'rectRounded',padding:14}},tooltip:Object.assign({},TT,{callbacks:{label:function(c){return c.dataset.label+': '+fmt(c.raw);}}})},scales:{x:{stacked:true,ticks:{color:TICK,font:{family:'IBM Plex Mono',size:9}},grid:{display:false}},y:{stacked:true,ticks:{callback:function(v){return fS(v);},color:TICK,font:{family:'IBM Plex Mono',size:10}},grid:{color:GRID,drawBorder:false}}}}});
+}
+function bPareto(){
+  var rows=gpareto(),pb=document.getElementById('pb');if(!pb)return;
+  if(!rows.length){pb.innerHTML='<div class="nd">Sin datos</div>';return;}
+  var mx=rows[0].v;
+  pb.innerHTML=rows.map(function(r,i){return '<div class="prow"><span class="plbl">'+r.r+'</span><div class="ptrk"><div class="pfil" style="width:0;background:'+(i<2?'#E04F5F':i<4?'#E8A13A':PRI)+'" data-w="'+(mx>0?Math.round(r.v/mx*100):0)+'">'+fS(r.v)+'</div></div><span class="ppct">'+r.a.toFixed(0)+'%</span></div>';}).join('');
+  document.getElementById('pareto-tag').textContent='TOP '+rows.length;
+  requestAnimationFrame(function(){requestAnimationFrame(function(){pb.querySelectorAll('.pfil').forEach(function(e){e.style.width=e.dataset.w+'%';});});});
+}
+function bSaldos(){
+  var rows=gsaldos(),sb=document.getElementById('sb-saldos');if(!sb)return;
+  if(!rows.length){sb.innerHTML='<div class="nd">Sin datos</div>';return;}
+  var mx=rows[0].v;
+  sb.innerHTML=rows.map(function(r){var nm=r.n.length>26?r.n.substring(0,26)+'...':r.n;return '<div class="prow mir"><span class="plbl long" title="'+r.n+'">'+nm+'</span><div class="ptrk"><div class="pfil" style="width:0;background:#1B9E6F" data-w="'+(mx>0?Math.round(r.v/mx*100):0)+'">'+fS(r.v)+'</div></div></div>';}).join('');
+  document.getElementById('saldos-tag').textContent='TOP '+rows.length;
+  requestAnimationFrame(function(){requestAnimationFrame(function(){sb.querySelectorAll('#sb-saldos .pfil').forEach(function(e){e.style.width=e.dataset.w+'%';});});});
+}
+function dtag(d){return d>90?'red':d>30?'amber':'green';}
+function bTop(){
+  var tb=document.getElementById('tb-top'),rows=gtop().slice(0,10);
+  if(!rows.length){tb.innerHTML='<tr><td colspan="6" class="nd">Sin datos</td></tr>';return;}
+  tb.innerHTML=rows.map(function(c,i){return '<tr><td class="mono">'+String(i+1).padStart(2,'0')+'</td><td class="bold">'+c.n+'</td><td class="mono">'+(c.ru||'')+'</td><td class="r"><span class="tag-d '+dtag(c.d)+'">'+c.d+'</span></td><td class="r bold">'+fmt(c.v)+'</td><td class="r"><span class="tag-d '+(c.pct>40?'red':c.pct>15?'amber':'green')+'">'+c.pct+'%</span></td></tr>';}).join('');
+}
+function rAlt(){
+  var q=(document.getElementById('si-alt').value||'').toLowerCase();
+  var rows=galt().filter(function(r){return !q||r.n.toLowerCase().indexOf(q)>=0;});
+  document.getElementById('alt-tag').textContent=rows.length+' CLI';
+  var tb=document.getElementById('tb-alt');
+  if(!rows.length){tb.innerHTML='<tr><td colspan="4" class="nd">Sin registros</td></tr>';return;}
+  tb.innerHTML=rows.map(function(c){return '<tr><td class="bold">'+c.n+'</td><td class="mono">'+(c.ru||'')+'</td><td class="r"><span class="tag-d '+dtag(c.d)+'">'+c.d+'</span></td><td class="r bold">'+fmt(c.v)+'</td></tr>';}).join('');
+}
+function rCnt(){
+  var q=(document.getElementById('si-cnt').value||'').toLowerCase();
+  var all=gcnt().filter(function(r){return !q||r.n.toLowerCase().indexOf(q)>=0;});
+  var rows=cntAll?all:all.slice(0,10);
+  document.getElementById('cnt-tag').textContent=all.length+' CLI';
+  var m=document.getElementById('cnt-more');if(m)m.style.display=(all.length>10&&!cntAll)?'block':'none';
+  var l=document.getElementById('cnt-less');if(l)l.style.display=(all.length>10&&cntAll)?'block':'none';
+  var tb=document.getElementById('tb-cnt');
+  if(!rows.length){tb.innerHTML='<tr><td colspan="6" class="nd">Sin registros</td></tr>';return;}
+  tb.innerHTML=rows.map(function(r,i){return '<tr><td class="mono">'+String(i+1).padStart(2,'0')+'</td><td class="bold">'+r.n+'</td><td class="mono">'+(r.ru||'')+'</td><td class="r"><span class="tag-d '+dtag(r.d)+'">'+r.d+'</span></td><td class="r bold">'+fmt(r.v)+'</td><td class="r">'+r.dc+'</td></tr>';}).join('');
+}
+function rBlq(){
+  var q=(document.getElementById('si-blq').value||'').toLowerCase();
+  var all=gbloq().filter(function(r){return !q||r.n.toLowerCase().indexOf(q)>=0;});
+  var rows=blqAll?all:all.slice(0,10);
+  document.getElementById('blq-tag').textContent=all.length+' CLI';
+  var m=document.getElementById('blq-more');if(m)m.style.display=(all.length>10&&!blqAll)?'block':'none';
+  var l=document.getElementById('blq-less');if(l)l.style.display=(all.length>10&&blqAll)?'block':'none';
+  var tb=document.getElementById('tb-blq');
+  if(!rows.length){tb.innerHTML='<tr><td colspan="5" class="nd">Sin registros</td></tr>';return;}
+  tb.innerHTML=rows.map(function(r){return '<tr><td class="bold">'+r.n+'</td><td class="mono">'+r.ru+'</td><td class="r"><span class="tag-d '+dtag(r.d)+'">'+r.d+'</span></td><td class="r bold">'+fmt(r.v)+'</td><td class="r">'+r.dc+'</td></tr>';}).join('');
+}
+function initRutaSel(){
+  var sel=document.getElementById('ruta-sel');while(sel.options.length>1)sel.remove(1);
+  var list=ROUTE_LIST.filter(function(r){return r.canal===CANAL;});
+  if(HAS_AG&&fAg!=='todos'){list=list.filter(function(r){return (RUTA_DATA[r.id]&&RUTA_DATA[r.id].agente)===fAg;});}
+  list.forEach(function(r){var o=document.createElement('option');o.value=r.id;o.textContent=r.id+'  '+r.plantel+'  '+fS(r.vencido)+'  '+r.pctMora.toFixed(1)+'%';sel.appendChild(o);});
+}
+function selRuta(id){
+  var c=document.getElementById('ruta-content'),e=document.getElementById('ruta-empty');
+  if(!id||!RUTA_DATA[id]){c.style.display='none';e.style.display='block';return;}
+  var rd=RUTA_DATA[id];c.style.display='block';e.style.display='none';
+  document.getElementById('ruta-info').textContent=id+'  /  '+rd.canal+'  /  '+rd.region+(rd.agente?'  /  '+rd.agente:'');
+  var k=rd.kpi||{};
+  document.getElementById('ruta-kpis').innerHTML=[{l:'Cartera',v:fS(k.cartera||0),c:'pri'},{l:'Vencido',v:fS(k.vencido||0),c:'red'},{l:'Mora',v:(k.pctMora||0).toFixed(1)+'%',c:k.pctMora>15?'red':k.pctMora>3?'amber':'green'},{l:'No Vencido',v:fS(k.noVencido||0),c:'green'},{l:'Clientes',v:(k.clientes||0),c:''},{l:'Bloqueados',v:(k.bloqueados||0),c:'red'},{l:'Mora +60d',v:fS(k.mora60||0),c:'amber'}].map(function(x){return '<div class="rk"><div class="rk-v '+x.c+'">'+x.v+'</div><div class="rk-l">'+x.l+'</div></div>';}).join('');
+  var lbl=['1-30d','31-60d','61-90d','91-120d','+120d'];
+  mkChart('rc-ant',document.getElementById('rc-ant'),{type:'bar',data:{labels:lbl,datasets:[{data:rd.ant||[0,0,0,0,0],backgroundColor:[PRI,PRI,'#E8A13A','#D9714B','#E04F5F'],borderRadius:12,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:Object.assign({},TT,{callbacks:{label:function(c){return fmt(c.raw);}}})},scales:{y:{beginAtZero:true,ticks:{callback:function(v){return fS(v);},color:TICK,font:{family:'IBM Plex Mono',size:9}},grid:{color:GRID,drawBorder:false}},x:{ticks:{color:TICK,font:{family:'IBM Plex Mono',size:9}},grid:{display:false}}}}});
+  var p80=rd.pareto80||[],rpb=document.getElementById('ruta-pb');
+  if(p80.length){var mx=p80[0].v;rpb.innerHTML=p80.map(function(r,i){return '<div class="prow"><span class="plbl long" title="'+r.n+'">'+r.n+'</span><div class="ptrk"><div class="pfil" style="width:0;background:'+(i<2?'#E04F5F':i<4?'#E8A13A':PRI)+'" data-w="'+(mx>0?Math.round(r.v/mx*100):0)+'">'+fS(r.v)+'</div></div><span class="ppct">'+r.a.toFixed(0)+'%</span></div>';}).join('');document.getElementById('r-p80-tag').textContent=p80.filter(function(r){return r.a<=80;}).length+' = 80%';requestAnimationFrame(function(){requestAnimationFrame(function(){rpb.querySelectorAll('.pfil').forEach(function(e){e.style.width=e.dataset.w+'%';});});});}else rpb.innerHTML='<div class="nd">Sin datos</div>';
+  var tt=document.getElementById('ruta-tb-top'),tc=(rd.clientes||[]).slice(0,8);
+  tt.innerHTML=tc.length?tc.map(function(c,i){return '<tr><td class="mono">'+String(i+1).padStart(2,'0')+'</td><td class="bold">'+c.n+'</td><td class="r"><span class="tag-d '+dtag(c.d)+'">'+c.d+'</span></td><td class="r bold">'+fmt(c.v)+'</td></tr>';}).join(''):'<tr><td colspan="4" class="nd">Sin datos</td></tr>';
+  var tbq=document.getElementById('ruta-tb-blq'),bq=rd.bloq||[];
+  document.getElementById('r-blq-tag').textContent=bq.length;
+  tbq.innerHTML=bq.length?bq.map(function(r){return '<tr><td class="bold">'+r.n+'</td><td class="r"><span class="tag-d '+dtag(r.d)+'">'+r.d+'</span></td><td class="r bold">'+fmt(r.v)+'</td></tr>';}).join(''):'<tr><td colspan="3" class="nd">Sin bloqueados</td></tr>';
+}
+function uAll(){uKPI();uAgentes();bAnt();bGauge();bReg();bRut();bPareto();bSaldos();bTop();rAlt();rCnt();rBlq();}
+function setDate(){var d=new Date().toLocaleDateString('es-SV',{day:'numeric',month:'long',year:'numeric'});var t=document.getElementById('topdate');if(t)t.textContent=d;}
+
+window.addEventListener('load',function(){
+  setDate();initRutaSel();uAll();
+  fetch(CSV_URL).then(function(r){if(!r.ok)throw 0;return r.text();}).then(function(txt){
+    var res=Papa.parse(txt,{header:true,skipEmptyLines:true});
+    if(res.data&&res.data.length>10){procesarCSV(res.data);initRutaSel();uAll();document.getElementById('livestatus').textContent='En vivo';document.getElementById('liveBox').className='live';}
+    else{document.getElementById('livestatus').textContent='Datos base';}
+  }).catch(function(){document.getElementById('livestatus').textContent='Datos base';});
+});
+
+
+function nv(v){
+  if(v===null||v===undefined||v==='')return 0;
+  var s=v.toString().trim().replace(/[$\s]/g,'');
+  var hasDot=s.indexOf('.')>=0,hasComma=s.indexOf(',')>=0;
+  if(hasDot&&hasComma){if(s.lastIndexOf('.')>s.lastIndexOf(','))s=s.replace(/,/g,'');else s=s.replace(/\./g,'').replace(',','.');}
+  else if(hasComma&&!hasDot){var p=s.split(',');if(p.length===2&&p[1].length<=2)s=s.replace(',','.');else s=s.replace(/,/g,'');}
+  var x=parseFloat(s);return isNaN(x)?0:x;
+}
+function getCanal(ruta){
+  var r=String(ruta||'').toUpperCase();
+  if(r.indexOf('DET')===0||r.indexOf('DSM')===0||r.indexOf('DS')===0)return 'Detalle';
+  if(r.indexOf('INS')===0)return 'Institucional';
+  if(r.indexOf('SUP')===0)return 'Supermercado';
+  if(r.indexOf('EX')===0)return 'Exportacion';
+  if(r.indexOf('SP')===0||r.indexOf('SS')===0||r.indexOf('PS')===0||r.indexOf('MER')===0||r.indexOf('ME')===0)return 'Degustaciones';
+  return 'Otro';
+}
+var AGMAP={'DET001':'JONATHAN AGUIRRE','DET002':'ELIAS ALONSO','DET003':'ELIAS ALONSO','DET004':'JONATHAN AGUIRRE','DET005':'JONATHAN AGUIRRE','DET006':'JONATHAN AGUIRRE','DET007':'JONATHAN AGUIRRE','DET008':'ELIAS ALONSO','DET009':'ELIAS ALONSO','DET010':'SAMUEL DIAZ','DET011':'SAMUEL DIAZ','DET012':'JONATHAN AGUIRRE','DET014':'SAMUEL DIAZ','DET015':'ELIAS ALONSO','DET016':'JONATHAN AGUIRRE','DET017':'ELIAS ALONSO','DET018':'SAMUEL DIAZ','DET019':'ELIAS ALONSO','DET020':'ELIAS ALONSO','DET021':'JONATHAN AGUIRRE','DET022':'ELIAS ALONSO','DET023':'ELIAS ALONSO','DET024':'ELIAS ALONSO','DET025':'ELIAS ALONSO','DET026':'JONATHAN AGUIRRE','DET027':'ELIAS ALONSO','DET028':'ELIAS ALONSO','DET029':'JONATHAN AGUIRRE','DET030':'JONATHAN AGUIRRE','DET031':'ELIAS ALONSO','DET032':'JONATHAN AGUIRRE','DET034':'ELIAS ALONSO','DET035':'JONATHAN AGUIRRE','DET036':'JONATHAN AGUIRRE','DET037':'ELIAS ALONSO','DET038':'ELIAS ALONSO','DET040':'ELIAS ALONSO','DET041':'SAMUEL DIAZ','DET042':'ELIAS ALONSO','DET043':'ELIAS ALONSO','DET045':'SAMUEL DIAZ','DET046':'SAMUEL DIAZ','DET047':'JONATHAN AGUIRRE','DET048':'ELIAS ALONSO','DET051':'JONATHAN AGUIRRE','DET052':'ELIAS ALONSO','DET053':'ELIAS ALONSO','DET054':'ELIAS ALONSO','DET055':'ELIAS ALONSO','DET056':'ELIAS ALONSO','DET057':'SAMUEL DIAZ','DET058':'JONATHAN AGUIRRE','DET059':'ELIAS ALONSO','DET061':'JONATHAN AGUIRRE','DET062':'ELIAS ALONSO','DET063':'JONATHAN AGUIRRE','DET064':'JONATHAN AGUIRRE','DET065':'JONATHAN AGUIRRE','DET066':'JONATHAN AGUIRRE'};
+function getAgente(r){
+  var ru=String(r['RUTA']||'').toUpperCase(),cn=r._canal;
+  if(cn==='Detalle'){if(ru.indexOf('DSM')===0||ru.indexOf('DS')===0)return 'WALTER ALVARADO';return AGMAP[ru]||'SIN ASIGNAR';}
+  if(cn==='Institucional')return 'ERNESTO';
+  if(cn==='Supermercado'){var n=String(r['Nombre 1']||'').toUpperCase();if(n.indexOf('CALLEJA')>=0)return 'HECTOR LOPEZ';if(n.indexOf('OPERADORA DEL SUR')>=0)return 'ALEXIA ZELAYA';return 'SIN ASIGNAR';}
+  return 'SIN ASIGNAR';
+}
+function bloqd(r){var b=(r['BLOQ. PEDIDO']||'').toString().trim();return b==='1'||b==='1.0';}
+var AFIL=['HONDURAS','COSTA RICA','GUATEMALA','NICARAGUA'];
+function K(sub){
+  var cart=0,venc=0,nvm=0,m60=0,cont=0,cli={},cc={},bl={};
+  sub.forEach(function(r){cart+=nv(r['MONTO']);venc+=nv(r['MONTO VENCIDO']);nvm+=nv(r['MONTO NO VENCIDO']);m60+=Math.max(nv(r['DE 61-90']),0)+Math.max(nv(r['DE 91-120']),0)+Math.max(nv(r['MAS DE 120']),0);if(r['COD. CLIENTE'])cli[r['COD. CLIENTE']]=1;if(bloqd(r)&&r['COD. CLIENTE'])bl[r['COD. CLIENTE']]=1;if(nv(r['PLAZO'])===0&&nv(r['DIAS VENC'])>=1){cont+=nv(r['MONTO VENCIDO']);if(r['COD. CLIENTE'])cc[r['COD. CLIENTE']]=1;}});
+  var pct=cart!==0?Math.round(venc/cart*10000)/100:0;
+  return {cartera:Math.round(cart),vencido:Math.round(Math.max(venc,0)),noVencido:Math.round(nvm),pctMora:Math.max(pct,0),clientes:Object.keys(cli).length,bloqueados:Object.keys(bl).length,mora60:Math.round(m60),docs:sub.length,contados:Math.round(Math.max(cont,0)),cCli:Object.keys(cc).length};
+}
+function ant(s){var a=[0,0,0,0,0];s.forEach(function(r){a[0]+=Math.max(nv(r['DE 1-30']),0);a[1]+=Math.max(nv(r['DE 31-60']),0);a[2]+=Math.max(nv(r['DE 61-90']),0);a[3]+=Math.max(nv(r['DE 91-120']),0);a[4]+=Math.max(nv(r['MAS DE 120']),0);});return a.map(function(v){return Math.round(v);});}
+function topCli(s){var m={};s.forEach(function(r){var c=r['COD. CLIENTE'];if(!m[c])m[c]={n:String(r['Nombre 1']),ru:String(r['RUTA']).trim(),ct:0,v:0,d:0};m[c].ct+=nv(r['MONTO']);m[c].v+=nv(r['MONTO VENCIDO']);m[c].d=Math.max(m[c].d,nv(r['DIAS VENC']));});return Object.values(m).filter(function(v){return v.v>0;}).sort(function(a,b){return b.v-a.v;}).slice(0,20).map(function(v){return {n:v.n,ru:v.ru,v:Math.round(Math.max(v.v,0)),d:Math.round(v.d),pct:v.ct>0?Math.round(v.v/v.ct*100):0};});}
+function alt(s){var bs={};s.forEach(function(r){if(bloqd(r))bs[r['COD. CLIENTE']]=1;});var m={};s.forEach(function(r){if(nv(r['MONTO VENCIDO'])<=0)return;var c=r['COD. CLIENTE'];if(!m[c])m[c]={n:String(r['Nombre 1']),ru:String(r['RUTA']).trim(),v:0,d:0};m[c].v+=nv(r['MONTO VENCIDO']);m[c].d=Math.max(m[c].d,nv(r['DIAS VENC']));});return Object.keys(m).filter(function(k){return !bs[k]&&m[k].v>0;}).map(function(k){return {n:m[k].n,ru:m[k].ru,v:Math.round(Math.max(m[k].v,0)),d:Math.round(m[k].d)};}).sort(function(a,b){return b.d-a.d;}).slice(0,50);}
+function cnt(s){var s2=s.filter(function(r){return nv(r['PLAZO'])===0&&nv(r['DIAS VENC'])>=1;});var m={};s2.forEach(function(r){var c=r['COD. CLIENTE'];if(!m[c])m[c]={n:String(r['Nombre 1']),ru:String(r['RUTA']).trim(),v:0,d:0,dc:0};m[c].v+=nv(r['MONTO VENCIDO']);m[c].d=Math.max(m[c].d,nv(r['DIAS VENC']));m[c].dc++;});return Object.values(m).filter(function(v){return v.v>0;}).sort(function(a,b){return b.d-a.d;}).map(function(v){return {n:v.n,ru:v.ru,v:Math.round(Math.max(v.v,0)),d:Math.round(v.d),dc:v.dc};});}
+function bloq(s){var s2=s.filter(bloqd);var m={};s2.forEach(function(r){var c=r['COD. CLIENTE'];if(!m[c])m[c]={n:String(r['Nombre 1']),ru:String(r['RUTA']).trim(),v:0,d:0,dc:0};m[c].v+=nv(r['MONTO VENCIDO']);m[c].d=Math.max(m[c].d,nv(r['DIAS VENC']));m[c].dc++;});return Object.values(m).sort(function(a,b){return b.v-a.v;}).map(function(v){return {n:v.n,ru:v.ru,v:Math.round(Math.max(v.v,0)),d:Math.round(v.d),dc:v.dc};});}
+function rutas(s){var g={};s.forEach(function(r){var k=r['RUTA']||'';if(!g[k])g[k]={v:0,nv:0};g[k].v+=nv(r['MONTO VENCIDO']);g[k].nv+=nv(r['MONTO NO VENCIDO']);});var a=Object.keys(g).filter(function(k){return g[k].v>0;}).sort(function(x,y){return g[y].v-g[x].v;}).slice(0,10);return {labels:a,v:a.map(function(k){return Math.round(g[k].v);}),nv:a.map(function(k){return Math.max(Math.round(g[k].nv),0);})};}
+function pareto(s){var g={};s.forEach(function(r){var k=r['RUTA']||'';if(!g[k])g[k]=0;g[k]+=nv(r['MONTO VENCIDO']);});var a=Object.keys(g).filter(function(k){return g[k]>0;}).sort(function(x,y){return g[y]-g[x];}).slice(0,10);var tot=a.reduce(function(s,k){return s+g[k];},0),cum=0;return a.map(function(k){cum+=g[k];return {r:k,v:Math.round(g[k]),a:tot>0?Math.round(cum/tot*1000)/10:0};});}
+function saldos(s){var m={};s.forEach(function(r){var c=r['COD. CLIENTE'];if(!m[c])m[c]={n:String(r['Nombre 1']),v:0};m[c].v+=nv(r['MONTO']);});return Object.values(m).filter(function(v){return v.v>0;}).sort(function(a,b){return b.v-a.v;}).slice(0,10).map(function(v){return {n:v.n,v:Math.round(v.v)};});}
+function reg(s){var rs=['CENTRAL','ORIENTAL','OCCIDENTAL','PARACENTRLA'];var arr=rs.map(function(rg){return Math.max(Math.round(s.filter(function(x){return x['REGION']===rg;}).reduce(function(a,x){return a+nv(x['MONTO VENCIDO']);},0)),0);});arr.push(Math.max(Math.round(s.filter(function(x){return AFIL.indexOf((x['REGION']||'').toString().trim())>=0;}).reduce(function(a,x){return a+nv(x['MONTO VENCIDO']);},0)),0));return arr;}
+function p80(s){var m={};s.forEach(function(r){var c=r['COD. CLIENTE'];if(!m[c])m[c]={n:String(r['Nombre 1']),v:0};m[c].v+=nv(r['MONTO VENCIDO']);});var a=Object.values(m).filter(function(v){return v.v>0;}).sort(function(x,y){return y.v-x.v;});var tot=a.reduce(function(s,v){return s+v.v;},0),cum=0;return a.slice(0,15).map(function(v){cum+=v.v;return {n:v.n,v:Math.round(Math.max(v.v,0)),a:tot>0?Math.round(cum/tot*1000)/10:0};});}
+function bundle(s){return {kpi:K(s),ant:ant(s),reg:reg(s),rutas:rutas(s),pareto:pareto(s),saldos:saldos(s),top:topCli(s),alt:alt(s),cnt:cnt(s),bloq:bloq(s)};}
+function procesarCSV(rows){
+  rows=rows.filter(function(r){return r['MONTO']!==undefined&&r['RUTA']&&r['PLANTEL'];});
+  rows.forEach(function(r){r._canal=getCanal(r['RUTA']);});
+  var canalRows=rows.filter(function(r){return r._canal===CANAL;});
+  CD=bundle(canalRows);
+  if(HAS_AG){
+    var ND={};var ags={};
+    canalRows.forEach(function(r){var a=getAgente(r);if(!ags[a])ags[a]=[];ags[a].push(r);});
+    Object.keys(ags).forEach(function(a){if(a!=='SIN ASIGNAR')ND[a]=bundle(ags[a]);});
+    AGENTE_DATA=ND;
+  }
+  var rmap={};canalRows.forEach(function(r){var k=r['RUTA']||'';if(!rmap[k])rmap[k]=[];rmap[k].push(r);});
+  var NR={},NRL=[];
+  Object.keys(rmap).forEach(function(ru){var s=rmap[ru];var k=K(s);var ag=getAgente(s[0]);
+    NR[ru]={canal:s[0]._canal,plantel:String(s[0]['PLANTEL']||'').trim().replace('Lactosa ',''),region:String(s[0]['REGION']||'').trim(),agente:ag,kpi:k,ant:ant(s),clientes:topCli(s),pareto80:p80(s),bloq:bloq(s)};
+    NRL.push({id:ru,canal:NR[ru].canal,plantel:NR[ru].plantel,region:NR[ru].region,vencido:k.vencido,pctMora:k.pctMora,clientes:k.clientes});
+  });
+  NRL.sort(function(a,b){return b.vencido-a.vencido;});
+  RUTA_DATA=NR;ROUTE_LIST=NRL;
+  console.log('CSV '+CANAL+': '+canalRows.length+' filas, cartera $'+CD.kpi.cartera);
+}
+
+</script>
+</body></html>
