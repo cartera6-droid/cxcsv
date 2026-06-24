@@ -30,16 +30,15 @@ body{font-family:var(--sans);background:var(--bg);color:var(--txt);font-size:13p
 
 /* SIDEBAR */
 .sidebar{width:228px;background:var(--surface);border-radius:var(--r-lg);position:fixed;top:14px;left:14px;height:calc(100vh - 28px);display:flex;flex-direction:column;z-index:50;box-shadow:var(--shadow)}
-.sb-brand{padding:22px 20px 18px;display:flex;align-items:center;gap:12px}
-.sb-logo{height:42px;width:auto;flex-shrink:0}
-.sb-brand-txt{min-width:0}
+.sb-brand{padding:24px 20px 20px;display:flex;align-items:center;justify-content:center}
+.sb-logo{height:54px;width:auto;max-width:100%}
 .sb-title{font-size:14px;font-weight:700;letter-spacing:-.2px;color:var(--txt)}
 .sb-sub{font-size:10px;color:var(--txt3);margin-top:3px;letter-spacing:.4px;text-transform:uppercase;font-weight:500}
 .sb-section{padding:14px 22px 8px;font-size:9px;font-weight:700;letter-spacing:1.4px;color:var(--txt4);text-transform:uppercase}
 .sb-nav{display:flex;flex-direction:column;padding:0 14px;gap:3px}
 .sb-link{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-radius:12px;font-size:13px;color:var(--txt2);text-decoration:none;cursor:pointer;font-weight:500;transition:all .14s;position:relative}
 .sb-link:hover{background:var(--surface3);color:var(--txt)}
-.sb-link.active{background:var(--steel);color:#fff;font-weight:600}
+.sb-link.active{background:#2B4C6F;color:#fff;font-weight:600}
 .sb-link.active::before{content:'';position:absolute;left:-14px;top:50%;transform:translateY(-50%);width:4px;height:22px;background:var(--steel);border-radius:0 4px 4px 0}
 .sb-link .tag{font-size:9px;font-family:var(--mono);color:var(--txt4);font-weight:600}
 .sb-link.active .tag{color:rgba(255,255,255,.6)}
@@ -177,7 +176,7 @@ tbody tr:last-child td{border-bottom:none}
 
 .ccard.dim{opacity:.32;filter:grayscale(.5);transform:none!important}
 .ccard.dim:hover{box-shadow:var(--shadow);transform:none!important}
-.chip.fixed{background:var(--steel);color:#fff;font-weight:600;cursor:default}
+.chip.fixed{background:#2B4C6F;color:#fff;font-weight:600;cursor:default}
 .prow.mir{flex-direction:row-reverse}
 .prow.mir .plbl{text-align:right}
 .prow.mir .ptrk{display:flex;justify-content:flex-end}
@@ -190,10 +189,6 @@ tbody tr:last-child td{border-bottom:none}
   <aside class="sidebar">
     <div class="sb-brand">
       <img src="logo.jpg" alt="Lactolac" class="sb-logo" onerror="this.style.display='none'">
-      <div class="sb-brand-txt">
-        <div class="sb-title">Lactolac El Salvador</div>
-        <div class="sb-sub">Cuentas por Cobrar</div>
-      </div>
     </div>
     <div class="sb-section">Vistas</div>
     <nav class="sb-nav">
@@ -399,7 +394,7 @@ function mkChart(id,el,cfg){if(CH[id])CH[id].destroy();CH[id]=new Chart(el,cfg);
 function bAnt(){
   var d=ga(),lbl=['1-30d','31-60d','61-90d','91-120d','+120d'];
   var mx=Math.max.apply(null,d.concat([1])),mxi=d.indexOf(mx);
-  var cols=d.map(function(v,i){return i===mxi?'#2B4C6F':stripePattern('#5A7A9B');});
+  var cols=d.map(function(v,i){return i===mxi?PRI:stripePattern(PRI);});
   mkChart('ant',document.getElementById('c-ant'),{type:'bar',
     data:{labels:lbl,datasets:[{data:d,backgroundColor:cols,borderRadius:14,borderSkipped:false}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:Object.assign({},TT,{callbacks:{label:function(c){return fmt(c.raw);}}})},scales:{y:{beginAtZero:true,ticks:{callback:function(v){return fS(v);},color:TICK,font:{family:'IBM Plex Mono',size:10}},grid:{color:GRID,drawBorder:false}},x:{ticks:{color:TICK,font:{family:'IBM Plex Mono',size:10}},grid:{display:false}}}}});
@@ -417,13 +412,13 @@ function bGauge(){
 function bReg(){
   var regs=['Central','Oriental','Occidental','Paracentral','Afiliadas'],d=greg();
   mkChart('reg',document.getElementById('c-reg'),{type:'bar',
-    data:{labels:regs,datasets:[{data:d,backgroundColor:'#2B4C6F',borderRadius:12,borderSkipped:false}]},
+    data:{labels:regs,datasets:[{data:d,backgroundColor:PRI,borderRadius:12,borderSkipped:false}]},
     options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:Object.assign({},TT,{callbacks:{label:function(c){return fmt(c.raw);}}})},scales:{x:{beginAtZero:true,ticks:{callback:function(v){return fS(v);},color:TICK,font:{family:'IBM Plex Mono',size:10}},grid:{color:GRID,drawBorder:false}},y:{ticks:{color:TICK,font:{family:'IBM Plex Sans',size:10}},grid:{display:false}}}}});
 }
 function bRut(){
   var d=grutas();
   mkChart('rut',document.getElementById('c-rut'),{type:'bar',
-    data:{labels:d.labels,datasets:[{label:'Vencido',data:d.v,backgroundColor:stripePattern('#E04F5F'),borderRadius:10,borderSkipped:false},{label:'No Vencido',data:d.nv,backgroundColor:stripePattern('#5A7A9B'),borderRadius:10,borderSkipped:false}]},
+    data:{labels:d.labels,datasets:[{label:'Vencido',data:d.v,backgroundColor:stripePattern('#E04F5F'),borderRadius:10,borderSkipped:false},{label:'No Vencido',data:d.nv,backgroundColor:stripePattern(PRI),borderRadius:10,borderSkipped:false}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:TICK,font:{family:'IBM Plex Mono',size:10},boxWidth:9,boxHeight:9,usePointStyle:true,pointStyle:'rectRounded',padding:14}},tooltip:Object.assign({},TT,{callbacks:{label:function(c){return c.dataset.label+': '+fmt(c.raw);}}})},scales:{x:{stacked:true,ticks:{color:TICK,font:{family:'IBM Plex Mono',size:9}},grid:{display:false}},y:{stacked:true,ticks:{callback:function(v){return fS(v);},color:TICK,font:{family:'IBM Plex Mono',size:10}},grid:{color:GRID,drawBorder:false}}}}});
 }
 function bSaldos(){
@@ -517,10 +512,29 @@ function selRuta(id){
   tbq.innerHTML=bq.length?bq.map(function(r){return '<tr><td class="bold">'+r.n+'</td><td class="r"><span class="tag-d '+dtag(r.d)+'">'+r.d+'</span></td><td class="r bold">'+fmt(r.v)+'</td></tr>';}).join(''):'<tr><td colspan="3" class="nd">Sin bloqueados</td></tr>';
 }
 
+var PRI='#2B4C6F';
+var CANAL_THEME={
+  'todos':{pri:'#2B4C6F',dark:'#1F3A56',soft:'rgba(43,76,111,.10)',light:'#7C9CB8'},
+  'Detalle':{pri:'#3B82F6',dark:'#1D4ED8',soft:'rgba(59,130,246,.10)',light:'#93C5FD'},
+  'Institucional':{pri:'#4F46E5',dark:'#3730A3',soft:'rgba(79,70,229,.10)',light:'#A5B4FC'},
+  'Supermercado':{pri:'#7C3AED',dark:'#5B21B6',soft:'rgba(124,58,237,.10)',light:'#C4B5FD'},
+  'Degustaciones':{pri:'#E8A13A',dark:'#B97D1E',soft:'rgba(232,161,58,.12)',light:'#F2C77E'},
+  'Exportacion':{pri:'#7E6BB0',dark:'#5E4E8C',soft:'rgba(126,107,176,.12)',light:'#B3A4D6'}
+};
+function applyTheme(canal){
+  var t=CANAL_THEME[canal]||CANAL_THEME['todos'];
+  var r=document.documentElement.style;
+  r.setProperty('--steel',t.pri);
+  r.setProperty('--pri',t.pri);
+  r.setProperty('--pri-dark',t.dark);
+  r.setProperty('--pri-soft',t.soft);
+  r.setProperty('--pri-light',t.light);
+  PRI=t.pri;
+}
 function sf(t,v){
   document.querySelectorAll('.chip[data-f="'+t+'"]').forEach(function(b){b.classList.remove('active');});
   var b=document.querySelector('.chip[data-f="'+t+'"][data-v="'+v+'"]');if(b)b.classList.add('active');
-  if(t==='c'){fC=v;cntAll=false;blqAll=false;}
+  if(t==='c'){fC=v;cntAll=false;blqAll=false;applyTheme(v);}
   // reset ruta selector to filtered list
   document.getElementById('ruta-sel').value='';selRuta('');
   initRutaSel();
