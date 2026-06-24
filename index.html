@@ -38,7 +38,9 @@ body{font-family:var(--sans);background:var(--bg);color:var(--txt);font-size:13p
 .sb-nav{display:flex;flex-direction:column;padding:0 14px;gap:3px}
 .sb-link{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-radius:12px;font-size:13px;color:var(--txt2);text-decoration:none;cursor:pointer;font-weight:500;transition:all .14s;position:relative}
 .sb-link:hover{background:var(--surface3);color:var(--txt)}
-.sb-link.active{background:#2B4C6F;color:#fff;font-weight:600}
+.sb-link.active{background:var(--steel);color:#fff;font-weight:600}
+.sb-link.canalsel{background:var(--pri-soft);color:var(--pri-dark);font-weight:600}
+.sb-link.canalsel .tag{color:var(--pri-dark)}
 .sb-link.active::before{content:'';position:absolute;left:-14px;top:50%;transform:translateY(-50%);width:4px;height:22px;background:var(--steel);border-radius:0 4px 4px 0}
 .sb-link .tag{font-size:9px;font-family:var(--mono);color:var(--txt4);font-weight:600}
 .sb-link.active .tag{color:rgba(255,255,255,.6)}
@@ -196,9 +198,9 @@ tbody tr:last-child td{border-bottom:none}
     </nav>
     <div class="sb-section">Canales</div>
     <nav class="sb-nav">
-      <a class="sb-link" href="detalle/"><span>Detalle</span><span class="tag">DET</span></a>
-      <a class="sb-link" href="institucional/"><span>Institucional</span><span class="tag">INS</span></a>
-      <a class="sb-link" href="supermercado/"><span>Supermercado</span><span class="tag">SUP</span></a>
+      <a class="sb-link" href="detalle/" data-canal="Detalle"><span>Detalle</span><span class="tag">DET</span></a>
+      <a class="sb-link" href="institucional/" data-canal="Institucional"><span>Institucional</span><span class="tag">INS</span></a>
+      <a class="sb-link" href="supermercado/" data-canal="Supermercado"><span>Supermercado</span><span class="tag">SUP</span></a>
     </nav>
     <div class="sb-foot">
       <div class="live off" id="liveBox"><span class="dot"></span><span id="livestatus">Conectando...</span></div>
@@ -248,10 +250,10 @@ tbody tr:last-child td{border-bottom:none}
     <div class="sec"><span class="sec-t">Indicador de Mora</span><span class="sec-line"></span></div>
     <div class="g31">
       <div class="panel"><div class="panel-h"><span class="panel-t">Antig&uuml;edad de Saldos</span></div><div class="ch ch220"><canvas id="c-ant"></canvas></div></div>
-      <div class="panel"><div class="panel-h"><span class="panel-t">KPI Mora vs Meta 3%</span></div>
+      <div class="panel"><div class="panel-h"><span class="panel-t">KPI Mora vs Meta 5%</span></div>
         <div class="gauge-wrap">
           <div class="gauge-c"><canvas id="c-gauge"></canvas><div class="gauge-lbl"><div class="gauge-v" id="g-val">&mdash;</div><div class="gauge-s">Mora actual</div></div></div>
-          <div class="gauge-meta"><div class="gm"><div class="gm-v" id="g-venc">&mdash;</div><div class="gm-l">Vencido</div></div><div class="gm"><div class="gm-v">3.00%</div><div class="gm-l">Meta</div></div></div>
+          <div class="gauge-meta"><div class="gm"><div class="gm-v" id="g-venc">&mdash;</div><div class="gm-l">Vencido</div></div><div class="gm"><div class="gm-v">5.00%</div><div class="gm-l">Meta</div></div></div>
         </div>
       </div>
     </div>
@@ -402,9 +404,9 @@ function bAnt(){
 function bGauge(){
   var k=gk(),pct=Math.min(k.pctMora||0,100);
   var gv=document.getElementById('g-val');gv.textContent=(k.pctMora||0).toFixed(2)+'%';
-  gv.style.color=pct>15?'#E04F5F':pct>3?'#E8A13A':'#1B9E6F';
+  gv.style.color=pct>15?'#E04F5F':pct>5?'#E8A13A':'#1B9E6F';
   document.getElementById('g-venc').textContent=fS(k.vencido||0);
-  var col=pct>15?'#E04F5F':pct>3?'#E8A13A':'#1B9E6F';
+  var col=pct>15?'#E04F5F':pct>5?'#E8A13A':'#1B9E6F';
   mkChart('gauge',document.getElementById('c-gauge'),{type:'doughnut',
     data:{datasets:[{data:[pct,100-pct],backgroundColor:[col,'#EDF1F1'],borderWidth:0,circumference:180,rotation:270}]},
     options:{responsive:true,maintainAspectRatio:false,cutout:'72%',plugins:{legend:{display:false},tooltip:{enabled:false}}}});
@@ -531,10 +533,13 @@ function applyTheme(canal){
   r.setProperty('--pri-light',t.light);
   PRI=t.pri;
 }
+function syncSidebar(canal){
+  document.querySelectorAll('.sb-link[data-canal]').forEach(function(l){l.classList.toggle('canalsel',l.getAttribute('data-canal')===canal);});
+}
 function sf(t,v){
   document.querySelectorAll('.chip[data-f="'+t+'"]').forEach(function(b){b.classList.remove('active');});
   var b=document.querySelector('.chip[data-f="'+t+'"][data-v="'+v+'"]');if(b)b.classList.add('active');
-  if(t==='c'){fC=v;cntAll=false;blqAll=false;applyTheme(v);}
+  if(t==='c'){fC=v;cntAll=false;blqAll=false;applyTheme(v);syncSidebar(v);}
   // reset ruta selector to filtered list
   document.getElementById('ruta-sel').value='';selRuta('');
   initRutaSel();
