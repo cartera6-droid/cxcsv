@@ -167,9 +167,9 @@ tbody tr{transition:background .1s}tbody tr:hover{background:var(--surface2)}tbo
     <div class="sec"><span class="sec-t">Indicador de Mora</span><span class="sec-line"></span></div>
     <div class="g31">
       <div class="panel"><div class="panel-h"><span class="panel-t">Antig&uuml;edad de Saldos</span></div><div class="ch ch220"><canvas id="c-ant"></canvas></div></div>
-      <div class="panel"><div class="panel-h"><span class="panel-t">KPI Mora vs Meta 3%</span></div>
+      <div class="panel"><div class="panel-h"><span class="panel-t" id="gauge-title">KPI Mora vs Meta 3%</span></div>
         <div class="gauge-wrap"><div class="gauge-c"><canvas id="c-gauge"></canvas><div class="gauge-lbl"><div class="gauge-v" id="g-val">&mdash;</div><div class="gauge-s">Mora actual</div></div></div>
-          <div class="gauge-meta"><div class="gm"><div class="gm-v" id="g-venc">&mdash;</div><div class="gm-l">Vencido</div></div><div class="gm"><div class="gm-v">3.00%</div><div class="gm-l">Meta</div></div></div></div>
+          <div class="gauge-meta"><div class="gm"><div class="gm-v" id="g-venc">&mdash;</div><div class="gm-l">Vencido</div></div><div class="gm"><div class="gm-v" id="g-meta">3.00%</div><div class="gm-l">Meta</div></div></div></div>
       </div>
     </div>
 
@@ -224,10 +224,10 @@ tbody tr{transition:background .1s}tbody tr:hover{background:var(--surface2)}tbo
     </div>
 </div>
 <script>
-var CD={"kpi":{"cartera":1019250,"vencido":0,"noVencido":1019485,"pctMora":0,"clientes":2,"bloqueados":0,"mora60":0,"docs":452,"contados":0,"cCli":2},"ant":[0,0,0,0,0],"reg":[0,0,0,0,0],"rutas":{"labels":[],"v":[],"nv":[]},"pareto":[],"saldos":[{"n":"\"CALLEJA, S.A. DE C.V.\"","v":783150},{"n":"\"OPERADORA DEL SUR, S.A. DE C.V.\"","v":236100}],"top":[],"alt":[],"cnt":[],"bloq":[]};
-var RUTA_DATA={"SUP001":{"canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","agente":"HECTOR LOPEZ","kpi":{"cartera":208453,"vencido":0,"noVencido":208633,"pctMora":0,"clientes":2,"bloqueados":0,"mora60":0,"docs":100,"contados":0,"cCli":1},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]},"SUP002":{"canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","agente":"HECTOR LOPEZ","kpi":{"cartera":150824,"vencido":0,"noVencido":150824,"pctMora":0.0,"clientes":2,"bloqueados":0,"mora60":0,"docs":64,"contados":0,"cCli":0},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]},"SUP003":{"canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","agente":"HECTOR LOPEZ","kpi":{"cartera":121817,"vencido":0,"noVencido":121817,"pctMora":0.0,"clientes":2,"bloqueados":0,"mora60":0,"docs":45,"contados":0,"cCli":0},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]},"SUP004":{"canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","agente":"HECTOR LOPEZ","kpi":{"cartera":134317,"vencido":0,"noVencido":134317,"pctMora":0.0,"clientes":2,"bloqueados":0,"mora60":0,"docs":47,"contados":0,"cCli":0},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]},"SUP005":{"canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","agente":"HECTOR LOPEZ","kpi":{"cartera":109214,"vencido":0,"noVencido":109228,"pctMora":0,"clientes":2,"bloqueados":0,"mora60":0,"docs":50,"contados":0,"cCli":1},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]},"SUP006":{"canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","agente":"HECTOR LOPEZ","kpi":{"cartera":156399,"vencido":0,"noVencido":156418,"pctMora":0,"clientes":2,"bloqueados":0,"mora60":0,"docs":72,"contados":0,"cCli":0},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]},"SUP007":{"canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","agente":"HECTOR LOPEZ","kpi":{"cartera":138226,"vencido":0,"noVencido":138249,"pctMora":0,"clientes":2,"bloqueados":0,"mora60":0,"docs":74,"contados":0,"cCli":0},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]}};
-var ROUTE_LIST=[{"id":"SUP001","canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","vencido":0,"pctMora":0,"clientes":2},{"id":"SUP002","canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","vencido":0,"pctMora":0.0,"clientes":2},{"id":"SUP003","canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","vencido":0,"pctMora":0.0,"clientes":2},{"id":"SUP004","canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","vencido":0,"pctMora":0.0,"clientes":2},{"id":"SUP005","canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","vencido":0,"pctMora":0,"clientes":2},{"id":"SUP006","canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","vencido":0,"pctMora":0,"clientes":2},{"id":"SUP007","canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","vencido":0,"pctMora":0,"clientes":2}];
-var AGENTE_DATA={"ALEXIA ZELAYA":{"kpi":{"cartera":236100,"vencido":0,"noVencido":236236,"pctMora":0,"clientes":1,"bloqueados":0,"mora60":0,"docs":140,"contados":0,"cCli":1},"ant":[0,0,0,0,0],"reg":[0,0,0,0,0],"rutas":{"labels":[],"v":[],"nv":[]},"pareto":[],"saldos":[{"n":"\"OPERADORA DEL SUR, S.A. DE C.V.\"","v":236100}],"top":[],"alt":[],"cnt":[],"bloq":[]},"HECTOR LOPEZ":{"kpi":{"cartera":783150,"vencido":0,"noVencido":783249,"pctMora":0,"clientes":1,"bloqueados":0,"mora60":0,"docs":312,"contados":0,"cCli":1},"ant":[0,0,0,0,0],"reg":[0,0,0,0,0],"rutas":{"labels":[],"v":[],"nv":[]},"pareto":[],"saldos":[{"n":"\"CALLEJA, S.A. DE C.V.\"","v":783150}],"top":[],"alt":[],"cnt":[],"bloq":[]}};
+var CD={"kpi":{"cartera":1373170,"vencido":0,"noVencido":1374351,"pctMora":0,"clientes":3,"bloqueados":0,"mora60":0,"docs":633,"contados":0,"cCli":2},"ant":[0,0,0,0,0],"reg":[0,0,0,0],"rutas":{"labels":[],"v":[],"nv":[]},"pareto":[],"saldos":[{"n":"\"CALLEJA, S.A. DE C.V.\"","v":1173607},{"n":"\"OPERADORA DEL SUR, S.A. DE C.V.\"","v":199544},{"n":"MARCIAL ALBERTO BARRERA CALLEJAS","v":19}],"top":[],"alt":[],"cnt":[],"bloq":[]};
+var RUTA_DATA={"DSM113":{"canal":"Supermercado","plantel":"San Miguel","region":"ORIENTAL","agente":"WALTER ALVARADO","kpi":{"cartera":35785,"vencido":7388,"noVencido":28397,"pctMora":20.64,"clientes":9,"bloqueados":0,"mora60":0,"docs":134,"contados":0,"cCli":0},"ant":[7464,0,0,0,0],"clientes":[{"n":"SUPERMERCADOS Y TIENDAS GALO S.A. D","c":"Detalle","ru":"DSM113","v":2920,"d":7,"pct":20},{"n":"SUPERMERCADOS Y TIENDAS GALO S.A. D","c":"Detalle","ru":"DSM113","v":1668,"d":7,"pct":36},{"n":"SUPERMERCADOS Y TIENDAS GALO S.A. D","c":"Detalle","ru":"DSM113","v":1032,"d":7,"pct":17},{"n":"SUPERMERCADOS Y TIENDAS GALO S.A. D","c":"Detalle","ru":"DSM113","v":758,"d":8,"pct":25},{"n":"SUPERMERCADOS Y TIENDAS GALO S.A. D","c":"Detalle","ru":"DSM113","v":576,"d":7,"pct":16},{"n":"SUPERMERCADOS Y TIENDAS GALO S.A. D","c":"Detalle","ru":"DSM113","v":510,"d":7,"pct":17}],"pareto80":[{"n":"SUPERMERCADOS Y TIENDAS GALO S.A. D","v":2920,"a":39.1},{"n":"SUPERMERCADOS Y TIENDAS GALO S.A. D","v":1668,"a":61.5},{"n":"SUPERMERCADOS Y TIENDAS GALO S.A. D","v":1032,"a":75.3},{"n":"SUPERMERCADOS Y TIENDAS GALO S.A. D","v":758,"a":85.5},{"n":"SUPERMERCADOS Y TIENDAS GALO S.A. D","v":576,"a":93.2},{"n":"SUPERMERCADOS Y TIENDAS GALO S.A. D","v":510,"a":100.0}],"bloq":[]},"RED002":{"canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","agente":"ALEXIA ZELAYA","kpi":{"cartera":-19,"vencido":0,"noVencido":0,"pctMora":100.0,"clientes":1,"bloqueados":0,"mora60":0,"docs":2,"contados":0,"cCli":0},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]},"SSM001":{"canal":"Supermercado","plantel":"San Miguel","region":"CENTRAL","agente":"HECTOR LOPEZ","kpi":{"cartera":97577,"vencido":0,"noVencido":98154,"pctMora":0,"clientes":2,"bloqueados":0,"mora60":0,"docs":65,"contados":0,"cCli":0},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]},"SSM002":{"canal":"Supermercado","plantel":"San Miguel","region":"CENTRAL","agente":"HECTOR LOPEZ","kpi":{"cartera":62379,"vencido":0,"noVencido":62652,"pctMora":0,"clientes":2,"bloqueados":0,"mora60":0,"docs":46,"contados":0,"cCli":0},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]},"SUP000":{"canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","agente":"ALEXIA ZELAYA","kpi":{"cartera":-876,"vencido":0,"noVencido":-876,"pctMora":-0.0,"clientes":1,"bloqueados":0,"mora60":0,"docs":1,"contados":0,"cCli":0},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]},"SUP001":{"canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","agente":"HECTOR LOPEZ","kpi":{"cartera":243583,"vencido":0,"noVencido":243763,"pctMora":0,"clientes":2,"bloqueados":0,"mora60":0,"docs":101,"contados":0,"cCli":1},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]},"SUP002":{"canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","agente":"HECTOR LOPEZ","kpi":{"cartera":182691,"vencido":0,"noVencido":182691,"pctMora":0.0,"clientes":2,"bloqueados":0,"mora60":0,"docs":76,"contados":0,"cCli":0},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]},"SUP003":{"canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","agente":"HECTOR LOPEZ","kpi":{"cartera":155772,"vencido":0,"noVencido":155772,"pctMora":0.0,"clientes":2,"bloqueados":0,"mora60":0,"docs":51,"contados":0,"cCli":0},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]},"SUP004":{"canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","agente":"HECTOR LOPEZ","kpi":{"cartera":155340,"vencido":0,"noVencido":155340,"pctMora":0.0,"clientes":2,"bloqueados":0,"mora60":0,"docs":52,"contados":0,"cCli":0},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]},"SUP005":{"canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","agente":"HECTOR LOPEZ","kpi":{"cartera":132653,"vencido":0,"noVencido":132666,"pctMora":0,"clientes":2,"bloqueados":0,"mora60":0,"docs":65,"contados":0,"cCli":1},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]},"SUP006":{"canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","agente":"HECTOR LOPEZ","kpi":{"cartera":192996,"vencido":0,"noVencido":193015,"pctMora":0,"clientes":2,"bloqueados":0,"mora60":0,"docs":85,"contados":0,"cCli":0},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]},"SUP007":{"canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","agente":"HECTOR LOPEZ","kpi":{"cartera":151132,"vencido":0,"noVencido":151155,"pctMora":0,"clientes":2,"bloqueados":0,"mora60":0,"docs":84,"contados":0,"cCli":0},"ant":[0,0,0,0,0],"clientes":[],"pareto80":[],"bloq":[]}};
+var ROUTE_LIST=[{"id":"DSM113","canal":"Supermercado","plantel":"San Miguel","region":"ORIENTAL","vencido":7388,"pctMora":20.64,"clientes":9},{"id":"RED002","canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","vencido":0,"pctMora":100.0,"clientes":1},{"id":"SSM001","canal":"Supermercado","plantel":"San Miguel","region":"CENTRAL","vencido":0,"pctMora":0,"clientes":2},{"id":"SSM002","canal":"Supermercado","plantel":"San Miguel","region":"CENTRAL","vencido":0,"pctMora":0,"clientes":2},{"id":"SUP000","canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","vencido":0,"pctMora":-0.0,"clientes":1},{"id":"SUP001","canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","vencido":0,"pctMora":0,"clientes":2},{"id":"SUP002","canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","vencido":0,"pctMora":0.0,"clientes":2},{"id":"SUP003","canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","vencido":0,"pctMora":0.0,"clientes":2},{"id":"SUP004","canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","vencido":0,"pctMora":0.0,"clientes":2},{"id":"SUP005","canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","vencido":0,"pctMora":0,"clientes":2},{"id":"SUP006","canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","vencido":0,"pctMora":0,"clientes":2},{"id":"SUP007","canal":"Supermercado","plantel":"San Salvador","region":"CENTRAL","vencido":0,"pctMora":0,"clientes":2}];
+var AGENTE_DATA={"ALEXIA ZELAYA":{"kpi":{"cartera":199544,"vencido":0,"noVencido":199902,"pctMora":0,"clientes":1,"bloqueados":0,"mora60":0,"docs":136,"contados":0,"cCli":1},"ant":[0,0,0,0,0],"reg":[0,0,0,0],"rutas":{"labels":[],"v":[],"nv":[]},"pareto":[],"saldos":[{"n":"\"OPERADORA DEL SUR, S.A. DE C.V.\"","v":199544}],"top":[],"alt":[],"cnt":[],"bloq":[]},"HECTOR LOPEZ":{"kpi":{"cartera":1173626,"vencido":0,"noVencido":1174449,"pctMora":0,"clientes":2,"bloqueados":0,"mora60":0,"docs":497,"contados":0,"cCli":1},"ant":[0,0,0,0,0],"reg":[0,0,0,0],"rutas":{"labels":[],"v":[],"nv":[]},"pareto":[],"saldos":[{"n":"\"CALLEJA, S.A. DE C.V.\"","v":1173607},{"n":"MARCIAL ALBERTO BARRERA CALLEJAS","v":19}],"top":[],"alt":[],"cnt":[],"bloq":[]}};
 var CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vThp3ELURgROgYgiUkDDOB5qQSzDfW6xEoav8ICsVXxsV-sBg0CllsH9yBLj1MdsOJiIIsdjAUiOmSc/pub?gid=0&single=true&output=csv';
 var CANAL='Supermercado';
 var HAS_AG=true;
@@ -239,6 +239,7 @@ var GRID='rgba(0,0,0,.06)',TICK='#8B9893';
 
 function fmt(v){return '$'+Math.round(Math.max(v||0,0)).toLocaleString('en-US');}
 function fS(v){v=Math.max(v||0,0);return v>=1e6?'$'+(v/1e6).toFixed(1)+'M':v>=1000?'$'+(v/1000).toFixed(0)+'K':'$'+Math.round(v);}
+function rdisp(ru){var r=String(ru||'').toUpperCase();if(r.indexOf('EX')===0||r.indexOf('ADM')===0)return '';return ru||'';}
 function stripePattern(color){var c=document.createElement('canvas');c.width=8;c.height=8;var x=c.getContext('2d');x.fillStyle=color;x.fillRect(0,0,8,8);x.strokeStyle='rgba(255,255,255,.4)';x.lineWidth=2;x.beginPath();x.moveTo(0,8);x.lineTo(8,0);x.moveTo(-2,2);x.lineTo(2,-2);x.moveTo(6,10);x.lineTo(10,6);x.stroke();return x.createPattern(c,'repeat');}
 
 // Data source: if agente filter active (Detalle), use AGENTE_DATA, else canal data CD
@@ -302,12 +303,14 @@ function bAnt(){
   var cols=d.map(function(v,i){return i===mxi?PRI:stripePattern(PRI);});
   mkChart('ant',document.getElementById('c-ant'),{type:'bar',data:{labels:lbl,datasets:[{data:d,backgroundColor:cols,borderRadius:14,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:Object.assign({},TT,{callbacks:{label:function(c){return fmt(c.raw);}}})},scales:{y:{beginAtZero:true,ticks:{callback:function(v){return fS(v);},color:TICK,font:{family:'IBM Plex Mono',size:10}},grid:{color:GRID,drawBorder:false}},x:{ticks:{color:TICK,font:{family:'IBM Plex Mono',size:10}},grid:{display:false}}}}});
 }
+var CANAL_META={'Detalle':8,'Institucional':5,'Supermercado':0,'Degustaciones':0,'Exportacion':3};
 function bGauge(){
-  var k=gk(),pct=Math.min(k.pctMora||0,100);
+  var k=gk(),pct=Math.min(k.pctMora||0,100);var meta=CANAL_META[CANAL]!==undefined?CANAL_META[CANAL]:3;
   var gv=document.getElementById('g-val');gv.textContent=(k.pctMora||0).toFixed(2)+'%';
-  gv.style.color=pct>15?'#E04F5F':pct>3?'#E8A13A':'#1B9E6F';
+  gv.style.color=pct>15?'#E04F5F':pct>meta?'#E8A13A':'#1B9E6F';
   document.getElementById('g-venc').textContent=fS(k.vencido||0);
-  var col=pct>15?'#E04F5F':pct>3?'#E8A13A':'#1B9E6F';
+  var col=pct>15?'#E04F5F':pct>meta?'#E8A13A':'#1B9E6F';
+  var mt=document.getElementById('g-meta');if(mt)mt.textContent=meta.toFixed(2)+'%';var gt=document.getElementById('gauge-title');if(gt)gt.textContent='KPI Mora vs Meta '+meta+'%';
   mkChart('gauge',document.getElementById('c-gauge'),{type:'doughnut',data:{datasets:[{data:[pct,100-pct],backgroundColor:[col,'rgba(0,0,0,.06)'],borderWidth:0,circumference:180,rotation:270}]},options:{responsive:true,maintainAspectRatio:false,cutout:'72%',plugins:{legend:{display:false},tooltip:{enabled:false}}}});
 }
 function bReg(){
@@ -338,7 +341,7 @@ function dtag(d){return d>90?'red':d>30?'amber':'green';}
 function bTop(){
   var tb=document.getElementById('tb-top'),rows=gtop().slice(0,10);
   if(!rows.length){tb.innerHTML='<tr><td colspan="6" class="nd">Sin datos</td></tr>';return;}
-  tb.innerHTML=rows.map(function(c,i){return '<tr><td class="mono">'+String(i+1).padStart(2,'0')+'</td><td class="bold">'+c.n+'</td><td class="mono">'+(c.ru||'')+'</td><td class="r"><span class="tag-d '+dtag(c.d)+'">'+c.d+'</span></td><td class="r bold">'+fmt(c.v)+'</td><td class="r"><span class="tag-d '+(c.pct>40?'red':c.pct>15?'amber':'green')+'">'+c.pct+'%</span></td></tr>';}).join('');
+  tb.innerHTML=rows.map(function(c,i){return '<tr><td class="mono">'+String(i+1).padStart(2,'0')+'</td><td class="bold">'+c.n+'</td><td class="mono">'+rdisp(c.ru)+'</td><td class="r"><span class="tag-d '+dtag(c.d)+'">'+c.d+'</span></td><td class="r bold">'+fmt(c.v)+'</td><td class="r"><span class="tag-d '+(c.pct>40?'red':c.pct>15?'amber':'green')+'">'+c.pct+'%</span></td></tr>';}).join('');
 }
 function rAlt(){
   var q=(document.getElementById('si-alt').value||'').toLowerCase();
@@ -346,7 +349,7 @@ function rAlt(){
   document.getElementById('alt-tag').textContent=rows.length+' CLI';
   var tb=document.getElementById('tb-alt');
   if(!rows.length){tb.innerHTML='<tr><td colspan="4" class="nd">Sin registros</td></tr>';return;}
-  tb.innerHTML=rows.map(function(c){return '<tr><td class="bold">'+c.n+'</td><td class="mono">'+(c.ru||'')+'</td><td class="r"><span class="tag-d '+dtag(c.d)+'">'+c.d+'</span></td><td class="r bold">'+fmt(c.v)+'</td></tr>';}).join('');
+  tb.innerHTML=rows.map(function(c){return '<tr><td class="bold">'+c.n+'</td><td class="mono">'+rdisp(c.ru)+'</td><td class="r"><span class="tag-d '+dtag(c.d)+'">'+c.d+'</span></td><td class="r bold">'+fmt(c.v)+'</td></tr>';}).join('');
 }
 function rCnt(){
   var q=(document.getElementById('si-cnt').value||'').toLowerCase();
@@ -357,7 +360,7 @@ function rCnt(){
   var l=document.getElementById('cnt-less');if(l)l.style.display=(all.length>10&&cntAll)?'block':'none';
   var tb=document.getElementById('tb-cnt');
   if(!rows.length){tb.innerHTML='<tr><td colspan="6" class="nd">Sin registros</td></tr>';return;}
-  tb.innerHTML=rows.map(function(r,i){return '<tr><td class="mono">'+String(i+1).padStart(2,'0')+'</td><td class="bold">'+r.n+'</td><td class="mono">'+(r.ru||'')+'</td><td class="r"><span class="tag-d '+dtag(r.d)+'">'+r.d+'</span></td><td class="r bold">'+fmt(r.v)+'</td><td class="r">'+r.dc+'</td></tr>';}).join('');
+  tb.innerHTML=rows.map(function(r,i){return '<tr><td class="mono">'+String(i+1).padStart(2,'0')+'</td><td class="bold">'+r.n+'</td><td class="mono">'+rdisp(r.ru)+'</td><td class="r"><span class="tag-d '+dtag(r.d)+'">'+r.d+'</span></td><td class="r bold">'+fmt(r.v)+'</td><td class="r">'+r.dc+'</td></tr>';}).join('');
 }
 function rBlq(){
   var q=(document.getElementById('si-blq').value||'').toLowerCase();
@@ -368,7 +371,7 @@ function rBlq(){
   var l=document.getElementById('blq-less');if(l)l.style.display=(all.length>10&&blqAll)?'block':'none';
   var tb=document.getElementById('tb-blq');
   if(!rows.length){tb.innerHTML='<tr><td colspan="5" class="nd">Sin registros</td></tr>';return;}
-  tb.innerHTML=rows.map(function(r){return '<tr><td class="bold">'+r.n+'</td><td class="mono">'+r.ru+'</td><td class="r"><span class="tag-d '+dtag(r.d)+'">'+r.d+'</span></td><td class="r bold">'+fmt(r.v)+'</td><td class="r">'+r.dc+'</td></tr>';}).join('');
+  tb.innerHTML=rows.map(function(r){return '<tr><td class="bold">'+r.n+'</td><td class="mono">'+rdisp(r.ru)+'</td><td class="r"><span class="tag-d '+dtag(r.d)+'">'+r.d+'</span></td><td class="r bold">'+fmt(r.v)+'</td><td class="r">'+r.dc+'</td></tr>';}).join('');
 }
 function initRutaSel(){
   var sel=document.getElementById('ruta-sel');while(sel.options.length>1)sel.remove(1);
@@ -414,15 +417,20 @@ function nv(v){
   else if(hasComma&&!hasDot){var p=s.split(',');if(p.length===2&&p[1].length<=2)s=s.replace(',','.');else s=s.replace(/,/g,'');}
   var x=parseFloat(s);return isNaN(x)?0:x;
 }
-function getCanal(ruta){
+function getCanalN(nombre,ruta){
+  var n=String(nombre||'').toUpperCase();
+  if(n.indexOf('OPERADORA DEL SUR')>=0||n.indexOf('CALLEJA')>=0)return 'Supermercado';
   var r=String(ruta||'').toUpperCase();
+  if(r.indexOf('ADM')===0)return 'Exportacion';
   if(r.indexOf('DET')===0||r.indexOf('DSM')===0||r.indexOf('DS')===0)return 'Detalle';
   if(r.indexOf('INS')===0)return 'Institucional';
   if(r.indexOf('SUP')===0)return 'Supermercado';
   if(r.indexOf('EX')===0)return 'Exportacion';
   if(r.indexOf('SP')===0||r.indexOf('SS')===0||r.indexOf('PS')===0||r.indexOf('MER')===0||r.indexOf('ME')===0)return 'Degustaciones';
+  if(r.indexOf('RED')===0)return 'Supermercado';
   return 'Otro';
 }
+function getCanal(ruta){return getCanalN('',ruta);}
 var AGMAP={'DET001':'JONATHAN AGUIRRE','DET002':'ELIAS ALONSO','DET003':'ELIAS ALONSO','DET004':'JONATHAN AGUIRRE','DET005':'JONATHAN AGUIRRE','DET006':'JONATHAN AGUIRRE','DET007':'JONATHAN AGUIRRE','DET008':'ELIAS ALONSO','DET009':'ELIAS ALONSO','DET010':'SAMUEL DIAZ','DET011':'SAMUEL DIAZ','DET012':'JONATHAN AGUIRRE','DET014':'SAMUEL DIAZ','DET015':'ELIAS ALONSO','DET016':'JONATHAN AGUIRRE','DET017':'ELIAS ALONSO','DET018':'SAMUEL DIAZ','DET019':'ELIAS ALONSO','DET020':'ELIAS ALONSO','DET021':'JONATHAN AGUIRRE','DET022':'ELIAS ALONSO','DET023':'ELIAS ALONSO','DET024':'ELIAS ALONSO','DET025':'ELIAS ALONSO','DET026':'JONATHAN AGUIRRE','DET027':'ELIAS ALONSO','DET028':'ELIAS ALONSO','DET029':'JONATHAN AGUIRRE','DET030':'JONATHAN AGUIRRE','DET031':'ELIAS ALONSO','DET032':'JONATHAN AGUIRRE','DET034':'ELIAS ALONSO','DET035':'JONATHAN AGUIRRE','DET036':'JONATHAN AGUIRRE','DET037':'ELIAS ALONSO','DET038':'ELIAS ALONSO','DET040':'ELIAS ALONSO','DET041':'SAMUEL DIAZ','DET042':'ELIAS ALONSO','DET043':'ELIAS ALONSO','DET045':'SAMUEL DIAZ','DET046':'SAMUEL DIAZ','DET047':'JONATHAN AGUIRRE','DET048':'ELIAS ALONSO','DET051':'JONATHAN AGUIRRE','DET052':'ELIAS ALONSO','DET053':'ELIAS ALONSO','DET054':'ELIAS ALONSO','DET055':'ELIAS ALONSO','DET056':'ELIAS ALONSO','DET057':'SAMUEL DIAZ','DET058':'JONATHAN AGUIRRE','DET059':'ELIAS ALONSO','DET061':'JONATHAN AGUIRRE','DET062':'ELIAS ALONSO','DET063':'JONATHAN AGUIRRE','DET064':'JONATHAN AGUIRRE','DET065':'JONATHAN AGUIRRE','DET066':'JONATHAN AGUIRRE'};
 function getAgente(r){
   var ru=String(r['RUTA']||'').toUpperCase(),cn=r._canal;
@@ -456,7 +464,8 @@ function procesarCSV(rows){
   rows.forEach(function(r){var c=r['COD. CLIENTE'];if(!c)return;if(r['PLANTEL']&&!cliP[c])cliP[c]=r['PLANTEL'];if(r['RUTA']&&!cliR[c])cliR[c]=r['RUTA'];if(r['REGION']&&!cliG[c])cliG[c]=r['REGION'];});
   rows.forEach(function(r){var c=r['COD. CLIENTE'];if(!c)return;if(!r['PLANTEL']&&cliP[c])r['PLANTEL']=cliP[c];if(!r['RUTA']&&cliR[c])r['RUTA']=cliR[c];if(!r['REGION']&&cliG[c])r['REGION']=cliG[c];});
   rows=rows.filter(function(r){return r['RUTA']&&r['PLANTEL'];});
-  rows.forEach(function(r){r._canal=getCanal(r['RUTA']);});
+  rows.forEach(function(r){r._canal=getCanalN(r['Nombre 1'],r['RUTA']);});
+  rows=rows.filter(function(r){return String(r['Nombre 2']||'').toUpperCase().indexOf('GRUPO CALDER')<0;});
   var canalRows=rows.filter(function(r){return r._canal===CANAL;});
   CD=bundle(canalRows);
   if(HAS_AG){
