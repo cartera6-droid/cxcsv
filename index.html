@@ -649,17 +649,23 @@ function getCanalN(nombre,ruta){
   if(n.indexOf('OPERADORA DEL SUR')>=0||n.indexOf('CALLEJA')>=0)return 'Supermercado';
   var r=String(ruta||'').toUpperCase();
   if(r.indexOf('ADM')===0)return 'Exportacion';
-  if(r.indexOf('DET')===0||r.indexOf('DSM')===0||r.indexOf('DS')===0)return 'Detalle';
+  if(r.indexOf('DET')===0||r.indexOf('DSM')===0)return 'Detalle';
   if(r.indexOf('INS')===0)return 'Institucional';
-  if(r.indexOf('SUP')===0)return 'Supermercado';
+  if(r.indexOf('SUP')===0||r.indexOf('RED')===0)return 'Supermercado';
   if(r.indexOf('EX')===0)return 'Exportacion';
-  if(r.indexOf('SP')===0||r.indexOf('SS')===0||r.indexOf('PS')===0||r.indexOf('MER')===0||r.indexOf('ME')===0)return 'Degustaciones';
-  if(r.indexOf('RED')===0)return 'Supermercado';
+  if(r.indexOf('MER')===0||r.indexOf('PSM')===0||r.indexOf('SPL')===0||r.indexOf('SPS')===0||r.indexOf('SSM')===0)return 'Degustaciones';
   return 'Otro';
 }
 function getCanal(ruta){return getCanalN('',ruta);}
 function procesarCSV(rows){
   rows=rows.filter(function(r){return r['MONTO']!==undefined;});
+  // Filtrar fila(s) de TOTAL: RUTA, COD. CLIENTE y Nombre 1 todos vacios
+  rows=rows.filter(function(r){
+    var re=!r['RUTA']||String(r['RUTA']).trim()==='';
+    var ce=!r['COD. CLIENTE']||String(r['COD. CLIENTE']).trim()==='';
+    var ne=!r['Nombre 1']||String(r['Nombre 1']).trim()==='';
+    return !(re&&ce&&ne);
+  });
   // Herencia por COD. CLIENTE: filas sin PLANTEL/RUTA heredan de otra fila del mismo cliente
   var cliP={},cliR={},cliG={};
   rows.forEach(function(r){
