@@ -208,7 +208,6 @@ tbody tr:last-child td{border-bottom:none}
     </div>
 </aside>
   <div class="main">
-    <div id="diag-box" style="background:#FEF3C7;border:1px solid #F59E0B;border-radius:8px;padding:8px 14px;margin:0 0 12px;font:11px IBM Plex Mono,monospace;color:#92400E">Cargando diagnostico CSV...</div>
     <div class="topbar">
       <div>
         <div class="tb-title">L&aacute;cteos del Corral S.A. de C.V. - Cartera General de Cobros</div>
@@ -625,7 +624,7 @@ function sf(t,v){
   uAll();
 }
 function uAll(){uKPI();uCanal();bAnt();bGauge();bReg();bRut();bSaldos();bPareto();bTop();rAlt();rCnt();rBlq();}
-function setDate(){var d=new Date().toLocaleDateString('es-SV',{day:'numeric',month:'long',year:'numeric'});document.getElementById('topdate').textContent=d;document.getElementById('sb-date').textContent=d;}
+function setDate(){var d='29 de junio de 2026';var t=document.getElementById('topdate');if(t)t.textContent=d;var s=document.getElementById('sb-date');if(s)s.textContent=d;}
 
 window.addEventListener('load',function(){
   setDate();initRutaSel();uAll();
@@ -751,12 +750,7 @@ function procesarCSV(rows){
   });
   NRL.sort(function(a,b){return b.vencido-a.vencido;});
   DATA=ND;DATA_TODOS=NT;RUTA_DATA=NR;ROUTE_LIST=NRL;if(Object.keys(NAF).length)DATA_AF=NAF;
-  // DIAGNOSTICO: suma cruda de MONTO directo del CSV (todas las filas leidas)
-  var _rawSum=0,_rawCount=0;rows.forEach(function(r){_rawSum+=nv(r['MONTO']);_rawCount++;});
-  window._diag={filas:_rawCount,sumaMonto:_rawSum};
-  var dg=document.getElementById('diag-box');
-  if(dg){dg.innerHTML='CSV leido: '+_rawCount+' filas &middot; Suma MONTO cruda: $'+_rawSum.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+' &middot; Cartera procesada (Todos): $'+(NT['todos']?NT['todos'].kpi.cartera:0).toLocaleString('en-US');}
-  console.log('DIAGNOSTICO CSV: '+_rawCount+' filas, suma MONTO cruda $'+_rawSum.toFixed(2));
+
   console.log('CSV ES: '+esRows.length+' | Afiliadas: '+afRows.length);
 }
 
