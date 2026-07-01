@@ -467,8 +467,9 @@ function getAgente(r){
 function bloqd(r){var b=(r['BLOQ. PEDIDO']||'').toString().trim();return b==='1'||b==='1.0';}
 var AFIL=['HONDURAS','COSTA RICA','GUATEMALA','NICARAGUA'];
 function K(sub){
-  var cart=0,venc=0,nvm=0,m60=0,cont=0,cli={},cc={},bl={};
-  sub.forEach(function(r){cart+=nv(r['MONTO']);venc+=nv(r['MONTO VENCIDO']);nvm+=nv(r['MONTO NO VENCIDO']);m60+=Math.max(nv(r['DE 61-90']),0)+Math.max(nv(r['DE 91-120']),0)+Math.max(nv(r['MAS DE 120']),0);if(r['COD. CLIENTE'])cli[r['COD. CLIENTE']]=1;if(bloqd(r)&&r['COD. CLIENTE'])bl[r['COD. CLIENTE']]=1;if(nv(r['PLAZO'])===0&&nv(r['DIAS VENC'])>=1&&['L0','L1','DR'].indexOf(String(r['TIPO. DOC']||'').trim())>=0){cont+=nv(r['MONTO VENCIDO']);if(r['COD. CLIENTE'])cc[r['COD. CLIENTE']]=1;}});
+  var cart=0,venc=0,nvm=0,m60=0,cli={},bl={},contByCli={};
+  sub.forEach(function(r){cart+=nv(r['MONTO']);venc+=nv(r['MONTO VENCIDO']);nvm+=nv(r['MONTO NO VENCIDO']);m60+=Math.max(nv(r['DE 61-90']),0)+Math.max(nv(r['DE 91-120']),0)+Math.max(nv(r['MAS DE 120']),0);if(r['COD. CLIENTE'])cli[r['COD. CLIENTE']]=1;if(bloqd(r)&&r['COD. CLIENTE'])bl[r['COD. CLIENTE']]=1;if(nv(r['PLAZO'])===0&&nv(r['DIAS VENC'])>=1&&['L0','L1','DR'].indexOf(String(r['TIPO. DOC']||'').trim())>=0){var k0=r['COD. CLIENTE']||'_';contByCli[k0]=(contByCli[k0]||0)+nv(r['MONTO VENCIDO']);}});
+  var cont=0,cc={};Object.keys(contByCli).forEach(function(k){if(contByCli[k]>0){cont+=contByCli[k];cc[k]=1;}});
   var pct=cart!==0?Math.round(venc/cart*10000)/100:0;
   return {cartera:Math.round(cart),vencido:Math.round(Math.max(venc,0)),noVencido:Math.round(nvm),pctMora:Math.max(pct,0),clientes:Object.keys(cli).length,bloqueados:Object.keys(bl).length,mora60:Math.round(m60),docs:sub.length,contados:Math.round(Math.max(cont,0)),cCli:Object.keys(cc).length};
 }
