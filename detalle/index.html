@@ -128,6 +128,10 @@ tbody tr{transition:background .1s}tbody tr:hover{background:var(--surface2)}tbo
 .empty{text-align:center;padding:48px 20px;color:var(--txt4)}
 .empty-t{font-size:14px;font-weight:600;color:var(--txt3)}.empty-s{font-size:11px;margin-top:6px;font-family:var(--mono)}
 @media(max-width:980px){.g2,.g31{grid-template-columns:1fr}}
+
+.pagehead .live{opacity:0;transition:opacity .4s;pointer-events:none}
+.pagehead .live.show{opacity:1}
+.pagehead:hover .live{opacity:1}
 </style>
 </head>
 <body>
@@ -325,7 +329,7 @@ function bReg(){
 }
 function bRut(){
   var d=grutas();
-  mkChart('rut',document.getElementById('c-rut'),{type:'bar',data:{labels:d.labels,datasets:[{label:'No Vencido',data:d.nv,backgroundColor:stripePattern(PRI),borderRadius:10,borderSkipped:false},{label:'Vencido',data:d.v,backgroundColor:stripePattern('#E04F5F'),borderRadius:10,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:TICK,font:{family:'IBM Plex Mono',size:10},boxWidth:9,boxHeight:9,usePointStyle:true,pointStyle:'rectRounded',padding:14}},tooltip:Object.assign({},TT,{callbacks:{label:function(c){return c.dataset.label+': '+fmt(c.raw);}}})},scales:{x:{stacked:true,ticks:{color:TICK,font:{family:'IBM Plex Mono',size:9}},grid:{display:false}},y:{stacked:true,ticks:{callback:function(v){return fS(v);},color:TICK,font:{family:'IBM Plex Mono',size:10}},grid:{color:GRID,drawBorder:false}}}}});
+  mkChart('rut',document.getElementById('c-rut'),{type:'bar',data:{labels:d.labels,datasets:[{label:'Vencido',data:d.v,backgroundColor:stripePattern('#E04F5F'),borderRadius:10,borderSkipped:false},{label:'No Vencido',data:d.nv,backgroundColor:stripePattern(PRI),borderRadius:10,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:TICK,font:{family:'IBM Plex Mono',size:10},boxWidth:9,boxHeight:9,usePointStyle:true,pointStyle:'rectRounded',padding:14}},tooltip:Object.assign({},TT,{callbacks:{label:function(c){return c.dataset.label+': '+fmt(c.raw);}}})},scales:{x:{stacked:true,ticks:{color:TICK,font:{family:'IBM Plex Mono',size:9}},grid:{display:false}},y:{stacked:true,ticks:{callback:function(v){return fS(v);},color:TICK,font:{family:'IBM Plex Mono',size:10}},grid:{color:GRID,drawBorder:false}}}}});
 }
 function bPareto(){
   var rows=gpareto(),pb=document.getElementById('pb');if(!pb)return;
@@ -413,14 +417,15 @@ function selRuta(id){
 }
 function uAll(){uKPI();uAgentes();bAnt();bGauge();bReg();bRut();bPareto();bSaldos();bTop();rAlt();rM60();rCnt();rBlq();}
 function setDate(){var d=new Date().toLocaleDateString('es-SV',{day:'numeric',month:'long',year:'numeric'});var t=document.getElementById('topdate');if(t)t.textContent=d;var sd=document.getElementById('sb-date');if(sd)sd.textContent=d;}
+function showLive2(cls){var b=document.getElementById('liveBox');if(!b)return;b.className=cls+' show';clearTimeout(window._liveTO);window._liveTO=setTimeout(function(){b.className=cls;},4000);}
 
 window.addEventListener('load',function(){
-  setDate();initRutaSel();uAll();
+  setDate();initRutaSel();uAll();showLive2('live off');
   fetch(CSV_URL).then(function(r){if(!r.ok)throw 0;return r.text();}).then(function(txt){
     var res=Papa.parse(txt,{header:true,skipEmptyLines:true});
-    if(res.data&&res.data.length>10){procesarCSV(res.data);initRutaSel();uAll();document.getElementById('livestatus').textContent='En vivo';document.getElementById('liveBox').className='live';}
-    else{document.getElementById('livestatus').textContent='Datos base';}
-  }).catch(function(){document.getElementById('livestatus').textContent='Datos base';});
+    if(res.data&&res.data.length>10){procesarCSV(res.data);initRutaSel();uAll();document.getElementById('livestatus').textContent='En vivo';showLive2('live');}
+    else{document.getElementById('livestatus').textContent='Datos base';showLive2('live off');}
+  }).catch(function(){document.getElementById('livestatus').textContent='Datos base';showLive2('live off');});
 });
 
 
