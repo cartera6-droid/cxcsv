@@ -78,7 +78,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--txt);font-size:13p
 .kcard.feature .karrow{background:rgba(255,255,255,.15);color:#fff}
 .kval{font-family:var(--mono);font-size:30px;font-weight:600;letter-spacing:-1px;line-height:1;color:var(--txt)}
 .kcard.feature .kval{color:#fff}
-.kval.green{color:var(--green)}.kval.red{color:var(--red)}.kval.steel{color:var(--steel2)}
+.kval.green{color:var(--green)}.kval.red{color:var(--red)}.kval.venc{color:#C2334A}.kval.steel{color:var(--steel2)}
 .ksub{font-size:10.5px;color:var(--txt3);margin-top:11px;font-family:var(--sans);display:flex;align-items:center;gap:5px;font-weight:500}
 .kcard.feature .ksub{color:rgba(255,255,255,.7)}
 .ktrend{font-family:var(--mono);font-weight:600}
@@ -251,7 +251,7 @@ tbody tr:last-child td{border-bottom:none}
     <div class="kgrid">
       <div class="kcard feature"><div class="kc-top"><span class="klabel">Cartera Total</span><span class="karrow">&#8599;</span></div><div class="kval" id="k0">&mdash;</div><div class="ksub" id="k0s">&mdash;</div></div>
       <div class="kcard"><div class="kc-top"><span class="klabel">Mora General</span><span class="karrow">&#8599;</span></div><div class="kval red" id="k1">&mdash;</div><div class="ksub">del total de cartera</div></div>
-      <div class="kcard"><div class="kc-top"><span class="klabel">Vencido</span><span class="karrow">&#8599;</span></div><div class="kval red" id="k3">&mdash;</div><div class="ksub" id="k3s">&mdash;</div></div>
+      <div class="kcard"><div class="kc-top"><span class="klabel">Vencido</span><span class="karrow">&#8599;</span></div><div class="kval venc" id="k3">&mdash;</div><div class="ksub" id="k3s">&mdash;</div></div>
       <div class="kcard"><div class="kc-top"><span class="klabel">Clientes</span><span class="karrow">&#8599;</span></div><div class="kval steel" id="k4">&mdash;</div><div class="ksub">activos en cartera</div></div>
       <div class="kcard"><div class="kc-top"><span class="klabel">Bloqueados</span><span class="karrow">&#8599;</span></div><div class="kval red" id="k5">&mdash;</div><div class="ksub">bloqueo de pedido</div></div>
       <div class="kcard"><div class="kc-top"><span class="klabel">Mora +60 d&iacute;as</span><span class="karrow">&#8599;</span></div><div class="kval" id="k6">&mdash;</div><div class="ksub">riesgo alto</div></div>
@@ -286,7 +286,7 @@ tbody tr:last-child td{border-bottom:none}
     <div class="sec"><span class="sec-t">Clientes y Gesti&oacute;n</span><span class="sec-line"></span></div>
     <div class="g2">
       <div class="panel">
-        <div class="panel-h"><span class="panel-t">Top 10 Clientes por Vencido</span></div>
+        <div class="panel-h"><span class="panel-t">Top 10 Clientes Vencidos</span></div>
         <div class="tw"><table><thead><tr><th>#</th><th>Cliente</th><th id="th-top-ruta">Ruta</th><th>Canal</th><th class="r">D&iacute;as</th><th class="r">Vencido</th><th class="r">% Mora</th></tr></thead><tbody id="tb-top"></tbody></table></div>
       </div>
       <div class="panel">
@@ -454,9 +454,10 @@ function bGauge(){
   gv.style.color=pct>15?'#E04F5F':pct>meta?'#E8A13A':'#1B9E6F';
   document.getElementById('g-venc').textContent=fS(k.vencido||0);
   var col=pct>15?'#E04F5F':pct>meta?'#E8A13A':'#1B9E6F';
+  var vVenc=Math.max(k.vencido||0,0),vNoV=Math.max(k.noVencido||0,0);
   mkChart('gauge',document.getElementById('c-gauge'),{type:'doughnut',
-    data:{datasets:[{data:[pct,100-pct],backgroundColor:[col,'#EDF1F1'],borderWidth:0,circumference:180,rotation:270}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'72%',plugins:{legend:{display:false},tooltip:{enabled:false}}}});
+    data:{labels:['Vencido','No Vencido'],datasets:[{data:[vVenc,vNoV],backgroundColor:[col,'#EDF1F1'],borderWidth:0,circumference:180,rotation:270,hoverBackgroundColor:[col,'#E2E8E8'],hoverOffset:4}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'72%',plugins:{legend:{display:false},tooltip:Object.assign({},TT,{callbacks:{label:function(c){var tot=vVenc+vNoV;var p=tot>0?(c.raw/tot*100).toFixed(1):0;return c.label+': '+fmt(c.raw)+' ('+p+'%)';}}})}}});
 }
 function bReg(){
   var regs=(fM==='AF')?['Honduras','Costa Rica','Guatemala','Nicaragua']:['Central','Oriental','Occidental','Paracentral'],d=greg();
