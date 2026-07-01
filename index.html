@@ -184,6 +184,15 @@ tbody tr:last-child td{border-bottom:none}
 .prow.mir .ptrk{display:flex;justify-content:flex-end}
 .prow.mir .pfil{flex-direction:row-reverse}
 
+
+.tb-datewrap{display:flex;align-items:center;gap:8px;position:relative}
+.tb-live{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:#1B9E6F;background:rgba(27,158,111,.10);padding:3px 9px;border-radius:20px;opacity:0;transition:opacity .4s;pointer-events:none}
+.tb-live.show{opacity:1}
+.tb-datewrap:hover .tb-live{opacity:1}
+.tb-live-dot{width:6px;height:6px;border-radius:50%;background:#1B9E6F;animation:livePulse 1.6s infinite}
+.tb-live.off{color:#E8A13A;background:rgba(232,161,58,.12)}
+.tb-live.off .tb-live-dot{background:#E8A13A;animation:none}
+@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.3}}
 </style>
 </head>
 <body>
@@ -213,7 +222,7 @@ tbody tr:last-child td{border-bottom:none}
         <div class="tb-title">L&aacute;cteos del Corral S.A. de C.V. - Cartera General de Cobros</div>
         <div class="tb-sub">An&aacute;lisis consolidado de cartera y mora por canal</div>
       </div>
-      <div class="tb-date" id="topdate">&mdash;</div>
+      <div class="tb-datewrap"><div class="tb-date" id="topdate">&mdash;</div><span class="tb-live" id="tb-live"><span class="tb-live-dot"></span><span id="tb-live-txt">En vivo</span></span></div>
     </div>
 
     <div class="filters">
@@ -478,7 +487,7 @@ function bRut(){
   }
   var d=grutas();
   mkChart('rut',document.getElementById('c-rut'),{type:'bar',
-    data:{labels:d.labels,datasets:[{label:'No Vencido',data:d.nv,backgroundColor:stripePattern(PRI),borderRadius:10,borderSkipped:false},{label:'Vencido',data:d.v,backgroundColor:stripePattern('#E04F5F'),borderRadius:10,borderSkipped:false}]},
+    data:{labels:d.labels,datasets:[{label:'Vencido',data:d.v,backgroundColor:stripePattern('#E04F5F'),borderRadius:10,borderSkipped:false},{label:'No Vencido',data:d.nv,backgroundColor:stripePattern(PRI),borderRadius:10,borderSkipped:false}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:TICK,font:{family:'IBM Plex Mono',size:10},boxWidth:9,boxHeight:9,usePointStyle:true,pointStyle:'rectRounded',padding:14}},tooltip:Object.assign({},TT,{callbacks:{label:function(c){return c.dataset.label+': '+fmt(c.raw);}}})},scales:{x:{stacked:true,ticks:{color:TICK,font:{family:'IBM Plex Mono',size:9}},grid:{display:false}},y:{stacked:true,ticks:{callback:function(v){return fS(v);},color:TICK,font:{family:'IBM Plex Mono',size:10}},grid:{color:GRID,drawBorder:false}}}}});
 }
 function bSaldos(){
@@ -642,14 +651,21 @@ function sf(t,v){
 }
 function uAll(){uKPI();uCanal();bAnt();bGauge();bReg();bRut();bSaldos();bPareto();bTop();rAlt();rM60();rCnt();rBlq();}
 function setDate(){var d=new Date().toLocaleDateString('es-SV',{day:'numeric',month:'long',year:'numeric'});var t=document.getElementById('topdate');if(t)t.textContent=d;var s=document.getElementById('sb-date');if(s)s.textContent=d;}
+function showLive(txt,isOff){
+  var b=document.getElementById('tb-live');if(!b)return;
+  var t=document.getElementById('tb-live-txt');if(t)t.textContent=txt;
+  b.className='tb-live'+(isOff?' off':'')+' show';
+  clearTimeout(window._liveTO);
+  window._liveTO=setTimeout(function(){b.className='tb-live'+(isOff?' off':'');},4000);
+}
 
 window.addEventListener('load',function(){
-  setDate();initRutaSel();uAll();
+  setDate();initRutaSel();uAll();showLive('Conectando...',false);
   fetch(CSV_URL).then(function(r){if(!r.ok)throw 0;return r.text();}).then(function(txt){
     var res=Papa.parse(txt,{header:true,skipEmptyLines:true});
     if(res.data&&res.data.length>10){procesarCSV(res.data);initRutaSel();uAll();document.getElementById('livestatus').textContent='En vivo';document.getElementById('liveBox').className='live';}
     else{document.getElementById('livestatus').textContent='Datos base';}
-  }).catch(function(){document.getElementById('livestatus').textContent='Datos base';});
+  }).catch(function(){document.getElementById('livestatus').textContent='Datos base';showLive('Datos base',true);});
 });
 
 
